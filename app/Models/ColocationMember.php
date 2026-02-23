@@ -26,3 +26,6 @@ class ColocationMember extends Model
         return $this->belongsTo(Colocation::class);
     }
 }
+
+
+
