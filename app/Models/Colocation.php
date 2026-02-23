@@ -14,6 +14,7 @@ class Colocation extends Model
         'description',
         'status',
         'token',
+        'user_id',
         'created_at',
         'updated_at'
     ];
