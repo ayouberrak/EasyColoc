@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Expense extends Model
 {
     protected $fillable = [
+        'id',
         'titre',
         'amount',
         'date',
@@ -27,3 +28,6 @@ class Expense extends Model
         return $this->belongsTo(Colocation::class , 'colocation_id');
     }
 }
+
+
+
