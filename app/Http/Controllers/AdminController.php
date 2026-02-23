@@ -45,11 +45,14 @@ class AdminController extends Controller
 
     public function colocations()
     {
-        return view('admin.colocations');
+        $colocations = Colocation::with('owner')->withCount('members')->get();
+
+        return view('admin.colocations', compact('colocations'));
     }
 
     public function showColocation($id)
     {
-        return view('admin.show-colocation', compact('id'));
+        $colocation = Colocation::with(['owner', 'members.user'])->findOrFail($id);
+        return view('admin.show-colocation', compact('colocation'));
     }
 }
