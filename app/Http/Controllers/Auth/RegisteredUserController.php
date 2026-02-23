@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         if($user->is_global_admin == true){
-            return redirect(route('ddd', absolute: false));
+            return redirect(route('admin.dashboard', absolute: false));
         }else{
             return redirect(route('dashboard', absolute: false));
         }
