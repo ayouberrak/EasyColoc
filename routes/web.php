@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -7,10 +8,8 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::middleware('ban')->group(function(){
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'ban'])->group(function(){
+    Route::get('/dashboard', [\App\Http\Controllers\MemberDashboardController::class, 'index'])->name('dashboard');
 });
 
 
@@ -18,6 +17,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Colocation Routes
+    Route::get('/colocations/create', function () {
+        return view('colocations.create');
+    })->name('colocations.create');
+
+    Route::post('/colocations/store' , [ColocationController::class , 'store' ])->name('colocations.store');
 
     // Owner Routes
     Route::get('/owner/dashboard', [\App\Http\Controllers\OwnerDashboardController::class, 'index'])->name('owner.dashboard');
