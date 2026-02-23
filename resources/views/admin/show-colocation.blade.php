@@ -10,8 +10,8 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
         <div>
-            <h3 class="text-2xl font-bold">Villa Sunshine</h3>
-            <p class="text-slate-500 text-sm">ID: #COLOC-00{{ $id }} • Créé le 23 Février 2026</p>
+            <h3 class="text-2xl font-bold">{{ $colocation->name }}</h3>
+            <p class="text-slate-500 text-sm">ID: #COLOC-{{ str_pad($colocation->id, 4, '0', STR_PAD_LEFT) }} • Créé le {{ $colocation->created_at->format('d F Y') }}</p>
         </div>
     </div>
 
@@ -25,16 +25,16 @@
                 </h4>
                 <div class="space-y-4">
                     <p class="text-slate-600 leading-relaxed">
-                        Cette colocation située dans le quartier résidentiel offre un cadre de vie exceptionnel pour les jeunes professionnels. Entièrement meublée et équipée avec des installations modernes.
+                        {{ $colocation->description ?? "Aucune description fournie pour cette colocation." }}
                     </p>
                     <div class="grid grid-cols-2 gap-6 pt-4">
                         <div>
                             <p class="text-xs font-bold text-slate-400 uppercase">Statut</p>
-                            <span class="mt-1 inline-block px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold italic">Actif</span>
+                            <span class="mt-1 inline-block px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold italic uppercase">{{ $colocation->status }}</span>
                         </div>
                         <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase">Visibilité</p>
-                            <span class="mt-1 inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold">Publique</span>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Propriétaire</p>
+                            <span class="mt-1 inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold">{{ $colocation->owner->name ?? 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
@@ -45,37 +45,50 @@
                 <div class="p-8 border-b border-slate-100">
                     <h4 class="text-lg font-bold flex items-center gap-2">
                         <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        Membres de la Coloc (4)
+                        Membres de la Coloc ({{ $colocation->members->count() + 1 }})
                     </h4>
                 </div>
                 <div class="divide-y divide-slate-100">
-                    @php
-                        $dummyMembers = [
-                            ['name' => 'Ayoub Errak', 'role' => 'Propriétaire', 'email' => 'ayoub@example.com', 'joined' => '23 Feb 2026'],
-                            ['name' => 'Karim Ben', 'role' => 'Colocataire', 'email' => 'karim@example.com', 'joined' => '24 Feb 2026'],
-                            ['name' => 'Sarah Connor', 'role' => 'Colocataire', 'email' => 'sarah@example.com', 'joined' => '25 Feb 2026'],
-                            ['name' => 'John Doe', 'role' => 'En attente', 'email' => 'john@example.com', 'joined' => '26 Feb 2026'],
-                        ];
-                    @endphp
-                    @foreach($dummyMembers as $member)
                     <div class="p-6 flex items-center justify-between hover:bg-slate-50 transition-all">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center font-bold text-slate-600">
-                                {{ substr($member['name'], 0, 1) }}
+                                {{ substr($colocation->owner->name, 0, 1) }}
                             </div>
                             <div>
-                                <p class="font-bold">{{ $member['name'] }}</p>
-                                <p class="text-xs text-slate-500">{{ $member['email'] }}</p>
+                                <p class="font-bold">{{ $colocation->owner->name }}</p>
+                                <p class="text-xs text-slate-500">{{ $colocation->owner->email }}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="px-3 py-1 {{ $member['role'] === 'Propriétaire' ? 'bg-purple-50 text-purple-600' : ($member['role'] === 'Colocataire' ? 'bg-indigo-50 text-indigo-600' : 'bg-amber-50 text-amber-600') }} rounded-full text-[10px] font-black uppercase tracking-widest">
-                                {{ $member['role'] }}
+                            <span class="px-3 py-1 {{ $colocation->owner->role === 'admin' ? 'bg-purple-50 text-purple-600' : 'bg-indigo-50 text-indigo-600' }} rounded-full text-[10px] font-black uppercase tracking-widest">
+                                {{ $colocation->owner?->role ?? 'Owner' }}
                             </span>
-                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold italic">Depuis le {{ $member['joined'] }}</p>
+                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold italic">Rejoint le {{ $colocation->owner->created_at->format('d M Y') }}</p>
                         </div>
                     </div>
-                    @endforeach
+                    @forelse($colocation->members as $member)
+                    <div class="p-6 flex items-center justify-between hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center font-bold text-slate-600">
+                                {{ substr($member->user->name, 0, 1) }}
+                            </div>
+                            <div>
+                                <p class="font-bold">{{ $member->user->name }}</p>
+                                <p class="text-xs text-slate-500">{{ $member->user->email }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-3 py-1 {{ $member->role === 'admin' ? 'bg-purple-50 text-purple-600' : 'bg-indigo-50 text-indigo-600' }} rounded-full text-[10px] font-black uppercase tracking-widest">
+                                {{ $member->role }}
+                            </span>
+                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold italic">Rejoint le {{ $member->created_at->format('d M Y') }}</p>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="p-8 text-center text-slate-400 italic">
+                        Aucun membre pour le moment.
+                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -86,16 +99,12 @@
                 <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 italic">Statistiques Rapides</h4>
                 <div class="space-y-6">
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-500 text-sm">Dépenses ce mois</span>
-                        <span class="font-bold text-slate-800">2,450 MAD</span>
-                    </div>
-                    <div class="flex items-center justify-between">
                         <span class="text-slate-500 text-sm">Invitations actives</span>
-                        <span class="font-bold text-slate-800">2</span>
+                        <span class="font-bold text-slate-800">Static</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-500 text-sm">Taux d'occupation</span>
-                        <span class="font-bold text-slate-800">80%</span>
+                        <span class="text-slate-500 text-sm">Token de la coloc</span>
+                        <span class="font-mono text-xs bg-slate-50 px-2 py-1 rounded">{{ $colocation->token }}</span>
                     </div>
                 </div>
                 <hr class="my-6 border-slate-100">
