@@ -15,11 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $admin = User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'is_global_admin' => true,
         ]);
+
+        \App\Models\Colocation::factory(5)->create([
+            'user_id' => $admin->id,
+        ]);
+
+        User::factory(5)->create()->each(function ($user) {
+            \App\Models\Colocation::factory(1)->create([
+                'user_id' => $user->id,
+            ]);
+        });
     }
 }
