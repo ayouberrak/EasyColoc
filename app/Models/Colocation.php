@@ -28,3 +28,6 @@ class Colocation extends Model
     }
 
 }
+
+
+
