@@ -13,6 +13,6 @@ class Category extends Model
 
 
     public function expence(){
-
+        return $this->hasMany(Expense::class);
     }
 }
