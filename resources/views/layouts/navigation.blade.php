@@ -15,28 +15,39 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-12 sm:flex">
-                    @if(request()->routeIs('home') || request()->is('/'))
-                        <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Fonctionnalités</a>
-                        <a href="#how-it-works" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Comment ça marche</a>
-                    @endif
+                <div class="hidden space-x-8 sm:-my-px sm:ms-12 sm:flex h-20 items-center">
+                    <a href="{{ route('home') }}" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Home</a>
+                    <a href="{{ route('home') }}#features" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition">Comment ça marche</a>
+
+                    @guest
+                        <x-nav-link :href="route('colocations.create')" :active="request()->routeIs('colocations.create')" class="text-sm font-semibold">
+                            {{ __('New Colocation') }}
+                        </x-nav-link>
+                    @endguest
 
                     @auth
                         @if(Auth::user()->is_global_admin)
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-sm font-semibold">
-                                {{ __('Panel Admin') }}
+                                {{ __('Admin Panel') }}
+                            </x-nav-link>
+                        @endif
+
+
+                        @if(Auth::user()->activeMember && !Auth::user()->isOwner())
+                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-sm font-semibold">
+                                {{ __('My Colocation') }}
                             </x-nav-link>
                         @endif
 
                         @if(Auth::user()->isOwner())
                             <x-nav-link :href="route('owner.dashboard')" :active="request()->routeIs('owner.dashboard')" class="text-sm font-semibold">
-                                {{ __('Tableau Propriétaire') }}
+                                {{ __('Tableau de bord') }}
                             </x-nav-link>
                         @endif
 
-                        @if(Auth::user()->activeMember)
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-sm font-semibold">
-                                {{ __('Tableau de bord') }}
+                        @if(!Auth::user()->activeMember && !Auth::user()->isOwner())
+                            <x-nav-link :href="route('colocations.create')" :active="request()->routeIs('colocations.create')" class="text-sm font-semibold">
+                                {{ __('New Colocation') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -108,25 +119,37 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-b border-slate-100 animate-fade-in shadow-xl">
         <div class="pt-2 pb-3 space-y-1">
-            @if(request()->routeIs('home') || request()->is('/'))
-                <x-responsive-nav-link href="#features" class="font-bold">Fonctionnalités</x-responsive-nav-link>
-                <x-responsive-nav-link href="#how-it-works" class="font-bold">Comment ça marche</x-responsive-nav-link>
-            @endif
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">Home</x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('home') }}#features">Comment ça marche</x-responsive-nav-link>
+
+            @guest
+                <x-responsive-nav-link :href="route('colocations.create')" :active="request()->routeIs('colocations.create')">
+                    {{ __('New Colocation') }}
+                </x-responsive-nav-link>
+            @endguest
 
             @auth
                 @if(Auth::user()->is_global_admin)
-                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="font-bold">
-                        {{ __('Panel Admin') }}
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Admin Panel') }}
                     </x-responsive-nav-link>
                 @endif
+
+                @if(Auth::user()->activeMember && !Auth::user()->isOwner())
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('My Colocation') }}
+                    </x-responsive-nav-link>
+                @endif
+
                 @if(Auth::user()->isOwner())
-                    <x-responsive-nav-link :href="route('owner.dashboard')" :active="request()->routeIs('owner.dashboard')" class="font-bold">
-                        {{ __('Tableau Propriétaire') }}
+                    <x-responsive-nav-link :href="route('owner.dashboard')" :active="request()->routeIs('owner.dashboard')">
+                        {{ __('Tableau de bord') }}
                     </x-responsive-nav-link>
                 @endif
-                @if(Auth::user()->activeMember)
-                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="font-bold">
-                        {{ __('Tableau de bord') }}
+
+                @if(!Auth::user()->activeMember && !Auth::user()->isOwner())
+                    <x-responsive-nav-link :href="route('colocations.create')" :active="request()->routeIs('colocations.create')">
+                        {{ __('New Colocation') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth
