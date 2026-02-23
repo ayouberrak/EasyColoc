@@ -26,6 +26,9 @@ class User extends Authenticatable
         'is_banned'
     ];
 
+
+
+    
     /**
      * The attributes that should be hidden for serialization.
      *
