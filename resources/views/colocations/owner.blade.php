@@ -1,152 +1,177 @@
 <x-app-layout>
-    <div class="bg-white border-b border-slate-100 sticky top-16 z-40 transition-all duration-300">
+    <!-- Sub-Navbar Premium -->
+    <div class="glass-nav sticky top-[72px] md:top-[80px] z-40 transition-all duration-300 py-2">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+            <div class="flex items-center justify-between h-14">
                 <!-- Sub-Navbar Links -->
-                <div class="flex items-center space-x-8">
-                    <a href="{{ route('owner.dashboard', ['tab' => 'dashboard']) }}" 
-                       class="relative py-5 text-sm font-black transition-all {{ $tab === 'dashboard' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800' }}">
-                        Tableau de bord
-                        @if($tab === 'dashboard') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
-                    </a>
-                    <a href="{{ route('owner.dashboard', ['tab' => 'members']) }}" 
-                       class="relative py-5 text-sm font-black transition-all {{ $tab === 'members' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800' }}">
-                        Membres
-                        @if($tab === 'members') <span class="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 rounded-t-full"></span> @endif
-                    </a>
-                    <a href="{{ route('owner.dashboard', ['tab' => 'expenses']) }}" 
-                       class="relative py-5 text-sm font-black transition-all {{ $tab === 'expenses' ? 'text-rose-600' : 'text-slate-500 hover:text-slate-800' }}">
-                        Dépenses
-                        @if($tab === 'expenses') <span class="absolute bottom-0 left-0 w-full h-1 bg-rose-600 rounded-t-full"></span> @endif
-                    </a>
-                    <a href="{{ route('owner.dashboard', ['tab' => 'payments']) }}" 
-                       class="relative py-5 text-sm font-black transition-all {{ $tab === 'payments' ? 'text-green-600' : 'text-slate-500 hover:text-slate-800' }}">
-                        Paiements
-                        @if($tab === 'payments') <span class="absolute bottom-0 left-0 w-full h-1 bg-green-600 rounded-t-full"></span> @endif
-                    </a>
-                    <a href="{{ route('owner.dashboard', ['tab' => 'chat']) }}" 
-                       class="relative py-5 text-sm font-black transition-all {{ $tab === 'chat' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800' }}">
-                        Group Chat
-                        <span class="ml-2 px-1.5 py-0.5 bg-green-100 text-green-600 text-[8px] rounded-md animate-pulse">LIVE</span>
-                        @if($tab === 'chat') <span class="absolute bottom-0 left-0 w-full h-1 bg-indigo-600 rounded-t-full"></span> @endif
-                    </a>
+                <div class="flex items-center space-x-2 md:space-x-6">
+                    @foreach([
+                        ['tab' => 'dashboard', 'label' => 'Tableau de bord', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
+                        ['tab' => 'members', 'label' => 'Membres', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'],
+                        ['tab' => 'expenses', 'label' => 'Dépenses', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        ['tab' => 'payments', 'label' => 'Paiements', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    ] as $item)
+                        <a href="{{ route('owner.dashboard', ['tab' => $item['tab']]) }}" 
+                           class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all {{ $tab === $item['tab'] ? 'bg-blue-600 text-white shadow-lg shadow-blue-100 scale-105' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 hover:scale-105' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}" /></svg>
+                            <span class="hidden md:block">{{ $item['label'] }}</span>
+                        </a>
+                    @endforeach
                 </div>
 
                 <!-- Right Side Info -->
-                <div class="hidden md:flex items-center gap-4">
-                    <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full border border-rose-100 uppercase tracking-widest">Propriétaire</span>
+                <div class="hidden md:flex items-center gap-3">
+                    <div class="px-3 py-1 bg-red-50 text-red-600 text-[10px] font-black rounded-lg border border-red-100 uppercase tracking-widest flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+                        Owner Access
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="py-12 bg-slate-50 min-h-screen relative overflow-hidden">
+    <div class="py-12 bg-slate-50 min-h-screen relative overflow-hidden pt-24 md:pt-28">
         <!-- Decoration -->
-        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] bg-blue-50 rounded-full blur-3xl opacity-30 -z-0"></div>
-        <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[600px] h-[600px] bg-indigo-50 rounded-full blur-3xl opacity-30 -z-0"></div>
+        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] bg-blue-50 rounded-full blur-[120px] opacity-40 -z-0"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[600px] h-[600px] bg-indigo-50 rounded-full blur-[120px] opacity-40 -z-0"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
+            @if(session('success'))
+                <div class="mb-8 animate-fade-in">
+                    <div class="bg-green-50 border border-green-100 text-green-700 px-6 py-4 rounded-2xl flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <span class="text-sm font-bold">{{ session('success') }}</span>
+                        </div>
+                        <button type="button" @click="open = false" class="text-green-400 hover:text-green-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-8 animate-fade-in">
+                    <div class="bg-red-50 border border-red-100 text-red-700 px-6 py-4 rounded-2xl flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            <span class="text-sm font-bold">{{ session('error') }}</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if($tab === 'dashboard')
-                <!-- TAB: STATS & BALANCE (ENHANCED) -->
+                <!-- TAB: STATS & BALANCE -->
                 <div class="animate-fade-in space-y-10">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h1 class="text-4xl font-black text-slate-900 tracking-tight">Bonjour, {{ Auth::user()->name }} 👋</h1>
-                            <p class="text-slate-500 font-medium mt-1">Voici le pilotage de votre colocation <span class="text-blue-600 font-black">{{ $colocation->name }}</span>.</p>
+                            <h1 class="text-4xl font-black text-slate-900 tracking-tight font-heading leading-tight">Bonjour, {{ Auth::user()->name }} 👋</h1>
+                            <p class="text-slate-500 font-medium mt-1">Gérez votre colocation <span class="text-blue-600 font-black">{{ $colocation->name }}</span> en un clic.</p>
                         </div>
                     </div>
 
                     <!-- Enhanced Stats Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        <div class="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-white group hover:scale-[1.02] transition-transform">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center text-rose-600">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="premium-card p-8 group">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dépenses Totales</p>
+                                <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-md uppercase tracking-widest">Global</span>
                             </div>
-                            <div class="text-3xl font-black text-slate-900 font-outfit">4,369 DH</div>
-                            <div class="mt-4 flex items-center text-[10px] font-bold text-rose-600 italic">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-                                +12% ce mois
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Dépenses Totales</p>
+                            <div class="text-3xl font-black text-slate-900 font-heading tracking-tight">{{ number_format($totalExpenses, 2) }} DH</div>
+                            <div class="mt-4 flex items-center text-[10px] font-bold text-slate-400 italic">
+                                Historique global de la coloc
                             </div>
                         </div>
 
-                        <div class="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-white group hover:scale-[1.02] transition-transform text-left">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center text-green-600 text-left">
+                        <div class="premium-card p-8 group">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 text-left">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Collecté</p>
+                                <span class="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded-md uppercase tracking-widest">Reçu</span>
                             </div>
-                            <div class="text-3xl font-black text-slate-900 font-outfit">2,500 DH</div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Réglé</p>
+                            <div class="text-3xl font-black text-slate-900 font-heading tracking-tight">2,500 DH</div>
                             <div class="w-full bg-slate-100 h-1.5 mt-6 rounded-full overflow-hidden">
-                                <div class="bg-green-500 h-full w-[57%]"></div>
+                                <div class="bg-green-500 h-full w-[57%] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
                             </div>
                         </div>
 
-                        <div class="bg-gradient-to-br from-blue-600 to-indigo-800 p-8 rounded-[2.5rem] shadow-2xl shadow-blue-200 lg:col-span-2 text-white relative overflow-hidden group">
-                            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
+                        <div class="premium-card p-8 group col-span-1 md:col-span-2 bg-gradient-premium relative overflow-hidden">
+                            <div class="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700"></div>
                             <div class="relative z-10">
-                                <p class="text-[10px] font-black text-blue-100 uppercase tracking-widest mb-4 opacity-80">Reste à percevoir (Balance)</p>
-                                <div class="text-5xl font-black font-outfit">1,869 DH</div>
+                                <div class="flex items-center justify-between mb-6 text-white">
+                                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                                    </div>
+                                    <span class="text-[10px] font-black bg-white/20 px-2 py-1 rounded-md uppercase tracking-widest">En attente</span>
+                                </div>
+                                <p class="text-[10px] font-black text-blue-100/70 uppercase tracking-widest mb-1">Reste à percevoir</p>
+                                <div class="text-5xl font-black text-white font-heading tracking-tighter">1,869 DH</div>
                                 <div class="mt-8 flex items-center gap-4">
-                                    <button class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-xl text-[10px] font-black uppercase hover:bg-white/20 transition-all border border-white/20">Lancer un rappel</button>
-                                    <span class="text-[10px] font-medium text-blue-100 opacity-60">2 membres n'ont pas encore réglé.</span>
+                                    <button class="px-5 py-2.5 bg-white text-blue-600 text-[10px] font-black rounded-xl uppercase tracking-widest hover:bg-blue-50 transition-all active:scale-95 shadow-xl shadow-blue-900/20">Lancer un rappel</button>
+                                    <p class="text-[10px] font-medium text-blue-100 leading-tight">2 membres doivent encore régler leurs parts.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+
                     <!-- Who owes what Premium Cards -->
-                    <div class="bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-white overflow-hidden">
-                        <div class="p-10 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/50">
+                    <div class="premium-card overflow-hidden">
+                        <div class="p-8 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/50">
                             <div>
-                                <h3 class="text-2xl font-black text-slate-900">Situation des membres</h3>
-                                <p class="text-slate-500 text-sm font-medium mt-1">Suivez les versements de votre tribu en temps réel.</p>
+                                <h3 class="text-xl font-black text-slate-900 font-heading">Situation des membres</h3>
+                                <p class="text-slate-500 text-xs font-medium mt-1">Suivez les versements de vos colocs en temps réel.</p>
                             </div>
-                            <div class="flex items-center gap-2 px-6 py-3 bg-white rounded-2xl shadow-sm border border-slate-100">
-                                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest font-outfit">Live Tracking</span>
+                            <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-100">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Status</span>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="text-left">
-                                        <th class="py-6 px-10 text-[10px] font-black text-slate-400 uppercase tracking-widest">Colocataire</th>
-                                        <th class="py-6 px-10 text-[10px] font-black text-slate-400 uppercase tracking-widest">Progression</th>
-                                        <th class="py-6 px-10 text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">Dette</th>
-                                        <th class="py-6 px-10 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Action</th>
+                                    <tr class="text-left bg-slate-50/30">
+                                        <th class="py-5 px-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Colocataire</th>
+                                        <th class="py-5 px-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Progression</th>
+                                        <th class="py-5 px-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Dette Actuelle</th>
+                                        <th class="py-5 px-8 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-50">
                                     @foreach($colocation->members as $member)
                                         @php if($member->user_id === $colocation->user_id) continue; @endphp
                                         <tr class="hover:bg-slate-50/80 transition-all group">
-                                            <td class="py-8 px-10 flex items-center gap-4">
-                                                <div class="w-14 h-14 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center font-black text-slate-800 text-xl border border-slate-200 uppercase shadow-sm group-hover:scale-105 transition-transform">
+                                            <td class="py-6 px-8 flex items-center gap-4">
+                                                <div class="w-12 h-12 bg-white rounded-xl border border-slate-200 flex items-center justify-center font-black text-slate-800 shadow-sm group-hover:scale-105 transition-transform duration-300">
                                                     {{ substr($member->user->name, 0, 1) }}
                                                 </div>
                                                 <div>
-                                                    <span class="block font-black text-slate-900 text-lg">{{ $member->user->name }}</span>
-                                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">S'est joint il y a 3 mois</span>
+                                                    <span class="block font-black text-slate-900 text-base leading-tight">{{ $member->user->name }}</span>
+                                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Membre actif</span>
                                                 </div>
                                             </td>
-                                            <td class="py-8 px-10">
-                                                <div class="flex items-center gap-4">
+                                            <td class="py-6 px-8">
+                                                <div class="flex items-center gap-3">
                                                     <div class="flex-1 bg-slate-100 h-2 rounded-full w-24 overflow-hidden border border-slate-200">
-                                                        <div class="bg-blue-600 h-full w-[80%] rounded-full shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
+                                                        <div class="bg-blue-600 h-full w-[80%] rounded-full shadow-[0_0_8px_rgba(37,99,235,0.2)]"></div>
                                                     </div>
                                                     <span class="text-xs font-black text-slate-800">80%</span>
                                                 </div>
                                             </td>
-                                            <td class="py-8 px-10 text-left">
-                                                <span class="text-xl font-black text-rose-600 font-outfit">- 420.00 DH</span>
+                                            <td class="py-6 px-8">
+                                                <span class="text-lg font-black text-red-600 font-heading tracking-tight">- 420.00 DH</span>
                                             </td>
-                                            <td class="py-8 px-10 text-right">
-                                                <button class="px-6 py-3 text-[10px] font-black uppercase text-blue-600 hover:bg-white hover:shadow-md rounded-xl border border-transparent hover:border-blue-100 transition-all tracking-widest">WhatsApp Rappel</button>
+                                            <td class="py-6 px-8 text-right">
+                                                <button class="btn-premium px-4 py-2 inline-flex items-center text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100">
+                                                    Rappel WhatsApp
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -156,18 +181,19 @@
                     </div>
 
                     <!-- Danger Zone Premium -->
-                    <div class="bg-white rounded-[3rem] p-12 border border-rose-100 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-rose-50/30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="premium-card p-10 border-red-50 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-red-50/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         <div class="relative z-10 text-center md:text-left">
-                            <h3 class="text-2xl font-black text-slate-900">Propriétaire : Zone de danger</h3>
-                            <p class="text-slate-500 font-medium mt-2 max-w-md">La suppression de la colocation entraînera l'archivage définitif de tous les membres et de l'historique financier.</p>
+                            <h3 class="text-xl font-black text-slate-900 font-heading">Zone de danger</h3>
+                            <p class="text-slate-500 font-medium mt-1 max-w-md text-sm leading-relaxed">Attention, supprimer la colocation supprimera définitivement l'historique et les accès des membres.</p>
                         </div>
-                        <button type="button" class="relative z-10 px-10 py-5 bg-white text-rose-600 font-black rounded-[1.5rem] border border-rose-200 hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all shadow-2xl shadow-rose-100 flex items-center gap-4 active:scale-95 group/btn">
-                            <svg class="w-6 h-6 group-hover/btn:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        <button type="button" class="relative z-10 btn-premium px-8 py-4 bg-white text-red-600 border border-red-100 hover:bg-red-600 hover:text-white hover:border-red-600 shadow-xl shadow-red-100">
+                            <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             Supprimer la Colocation
                         </button>
                     </div>
                 </div>
+
 
             @elseif($tab === 'members')
                 <!-- TAB: MEMBERS MANAGEMENT (ENHANCED) -->
@@ -185,23 +211,54 @@
                                 <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-8 border border-blue-100">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                                 </div>
-                                <h3 class="text-2xl font-black text-slate-900 mb-2">Ajouter un Membre</h3>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">Envoyez une invitation par email</p>
+                                <h3 class="text-2xl font-black text-slate-900 mb-2 lowercase first-letter:uppercase">Ajouter un membre</h3>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">Rechercher par nom ou email</p>
                                 
-                                <form action="#" method="POST" class="space-y-8">
-                                    <div class="space-y-2">
-                                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Adresse Email</label>
-                                        <div class="relative group">
-                                            <input type="email" placeholder="coloc@easycoloc.com" class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-[1.5rem] text-slate-900 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-lg">
-                                            <div class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" /></svg>
-                                            </div>
-                                        </div>
+                                <form action="{{ route('owner.dashboard') }}" method="GET" class="space-y-6 mb-10">
+                                    <input type="hidden" name="tab" value="members">
+                                    <div class="relative group">
+                                        <input type="text" name="search" value="{{ $search }}" placeholder="Ex: Sara Lmkadem" class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-[1.5rem] text-slate-900 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-lg">
+                                        <button type="submit" class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 hover:text-blue-600 transition-colors">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        </button>
                                     </div>
-                                    <button type="button" class="w-full py-6 bg-blue-600 text-white font-black rounded-[1.5rem] hover:bg-blue-700 transition shadow-2xl shadow-blue-200 transform active:scale-[0.98] text-lg">
-                                        Envoyer l'invitation ✨
-                                    </button>
+                                    @if($search)
+                                        <div class="flex items-center justify-between px-4">
+                                            <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Résultats pour "{{ $search }}"</p>
+                                            <a href="{{ route('owner.dashboard', ['tab' => 'members']) }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 underline">Effacer</a>
+                                        </div>
+                                    @endif
                                 </form>
+
+                                <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                    @forelse($potentialMembers as $pMember)
+                                        <div class="flex items-center justify-between p-5 bg-slate-50/50 rounded-3xl border border-slate-100 hover:bg-white hover:border-blue-100 transition-all group">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center font-black text-slate-800 text-lg">
+                                                    {{ substr($pMember->name, 0, 1) }}
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-black text-slate-900 leading-tight">{{ $pMember->name }}</p>
+                                                    <p class="text-[10px] text-slate-400 font-medium truncate max-w-[150px]">{{ $pMember->email }}</p>
+                                                </div>
+                                            </div>
+                                            <form action="{{ route('colocations.invite') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="email" value="{{ $pMember->email }}">
+                                                <input type="hidden" name="colocation_id" value="{{ $colocation->id }}">
+                                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-[10px] font-black rounded-xl uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-blue-100 active:scale-95">
+                                                    Inviter
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-10 px-6 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                                            <p class="text-slate-300 font-black uppercase text-[10px] tracking-widest">
+                                                {{ $search ? 'Aucun utilisateur trouvé' : 'Recherchez un utilisateur' }}
+                                            </p>
+                                        </div>
+                                    @endforelse
+                                </div>
                             </div>
                         </div>
 
@@ -236,116 +293,138 @@
                                         </div>
                                     @endforeach
 
-                                    <!-- Pending Placeholder -->
-                                    <div class="flex items-center justify-between p-6 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 group opacity-60">
-                                        <div class="flex items-center gap-5">
-                                            <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center font-black text-slate-300 italic">?</div>
-                                            <div>
-                                                <p class="text-lg font-black text-slate-400 font-outfit tracking-tight">Sara.l@gmail.com</p>
-                                                <p class="text-[9px] text-slate-300 uppercase tracking-widest font-black">Invitation en attente</p>
+                                    @forelse($pendingInvitations as $invitation)
+                                        <div class="flex items-center justify-between p-6 bg-white rounded-[2rem] border border-dashed border-slate-200 group hover:border-blue-200 transition-all">
+                                            <div class="flex items-center gap-5">
+                                                <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center font-black text-slate-300 italic border border-slate-100">?</div>
+                                                <div>
+                                                    <p class="text-lg font-black text-slate-900 font-heading tracking-tight lowercase first-letter:uppercase truncate max-w-[200px]">{{ $invitation->email }}</p>
+                                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest font-black flex items-center gap-2">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></span>
+                                                        Invitation en attente
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-5 py-2.5 text-[9px] font-black text-slate-400 hover:text-slate-600 bg-slate-50 rounded-xl border border-slate-100 transition-all uppercase tracking-widest active:scale-95">Relancer</button>
+                                                <button class="px-5 py-2.5 text-[9px] font-black text-rose-500 hover:text-rose-700 bg-rose-50/50 rounded-xl border border-rose-100 transition-all uppercase tracking-widest active:scale-95">Annuler</button>
                                             </div>
                                         </div>
-                                        <button class="px-6 py-3 text-[10px] font-black text-rose-500 hover:text-rose-700 bg-rose-50/50 rounded-xl border border-rose-100 transition-all uppercase tracking-widest">Annuler</button>
-                                    </div>
+                                    @empty
+                                        <!-- No pending invitations -->
+                                    @endforelse
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+
             @elseif($tab === 'expenses')
-                <!-- TAB: EXPENSES (ENHANCED) -->
-                <div class="animate-fade-in space-y-12">
-                     <div class="flex items-center justify-between">
+                <!-- TAB: EXPENSES (SIMPLE O NADI OWNER VIEW) -->
+                <div class="animate-fade-in space-y-10">
+                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-100 pb-8">
                         <div>
-                            <h2 class="text-3xl font-black text-slate-900 tracking-tight font-outfit">Registre des Dépenses</h2>
-                            <p class="text-slate-500 font-medium mt-1">Gérez le budget de la colocation à la virgule près.</p>
+                            <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight font-heading">Gestion des Frais</h2>
+                            <p class="text-slate-500 font-medium mt-1">Gérez les dépenses de la colocation en toute simplicité.</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white p-2 rounded-2xl shadow-sm border border-slate-100">
+                            <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="pr-4">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Budget estimé</p>
+                                <p class="text-base font-black text-slate-800 mt-1">12,000 DH</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <!-- Add Expense Form (Clean Style) -->
                         <div class="lg:col-span-5">
-                            <div class="bg-white p-12 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-white sticky top-36">
-                                <div class="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600 mb-8 border border-rose-100">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                </div>
-                                <h3 class="text-2xl font-black text-slate-900 mb-2">Nouvelle Charge</h3>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">Une dépense partagée entre tous.</p>
-
-                                <form action="#" method="POST" class="space-y-8">
-                                    <div class="space-y-2">
-                                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Titre de la dépense</label>
-                                        <input type="text" placeholder="Facture Internet, Courses..." class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-[1.5rem] text-slate-900 focus:bg-white focus:ring-4 focus:ring-rose-100 focus:border-rose-700 focus:ring-opacity-10 transition-all font-medium">
+                            <div class="bg-white p-10 rounded-3xl shadow-xl shadow-slate-100 border border-slate-50 sticky top-36">
+                                <h3 class="text-xl font-black text-slate-900 mb-6">Nouveau Frais</h3>
+                                
+                                <form action="#" method="POST" class="space-y-5">
+                                    <div class="space-y-1.5">
+                                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Désignation</label>
+                                        <input type="text" placeholder="Ex: Réparation Plomberie" class="w-full px-6 py-4 bg-slate-50 border-transparent rounded-2xl text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/20 transition-all font-bold">
                                     </div>
-                                    <div class="grid grid-cols-2 gap-6">
-                                        <div class="space-y-2">
-                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Montant (DH)</label>
-                                            <input type="number" placeholder="0.00" class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-[1.5rem] text-slate-900 focus:bg-white focus:ring-4 focus:ring-rose-100 font-black text-2xl">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="space-y-1.5">
+                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Montant (DH)</label>
+                                            <input type="number" placeholder="0.00" class="w-full px-6 py-4 bg-slate-50 border-transparent rounded-2xl text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/20 font-black text-lg">
                                         </div>
-                                        <div class="space-y-2">
-                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Catégorie</label>
-                                            <select class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-[1.5rem] text-slate-900 focus:bg-white focus:ring-4 focus:ring-rose-100 font-bold transition-all appearance-none cursor-pointer">
-                                                <option>Alimentation</option>
-                                                <option>Factures</option>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Catégorie</label>
+                                            <select class="w-full px-6 py-4 bg-slate-50 border-transparent rounded-2xl text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/20 font-bold appearance-none cursor-pointer">
                                                 <option>Loyer</option>
-                                                <option>Divers</option>
+                                                <option>Eau/Élec</option>
+                                                <option>Internet</option>
+                                                <option>Autre</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <button type="button" class="w-full py-6 bg-rose-600 text-white font-black rounded-[1.5rem] hover:bg-rose-700 transition shadow-2xl shadow-rose-200 transform active:scale-[0.98] text-lg">
-                                        Enregistrer ✨
+                                    <div class="flex items-center gap-3 p-4 bg-blue-50/30 rounded-2xl border border-blue-50">
+                                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20">
+                                        <p class="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Dividé équitablement</p>
+                                    </div>
+                                    <button type="button" class="w-full py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-blue-600 transition-all shadow-lg active:scale-[0.98] text-sm uppercase tracking-widest">
+                                        Enregistrer
                                     </button>
                                 </form>
                             </div>
                         </div>
 
+                        <!-- Expenses List (Refined) -->
                         <div class="lg:col-span-7">
-                            <div class="bg-white p-12 rounded-[3rem] shadow-xl shadow-slate-200/50 border border-white">
-                                <div class="flex items-center justify-between mb-10">
-                                    <h3 class="text-2xl font-black text-slate-900">Charges du mois</h3>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase">Février 2026</span>
+                            <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-50 overflow-hidden">
+                                <div class="px-10 py-8 border-b border-slate-50 flex items-center justify-between">
+                                    <h3 class="text-lg font-black text-slate-900">Journal des Dépenses</h3>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Février 2026</span>
                                 </div>
-                                <div class="space-y-4">
-                                    <!-- Expense Item -->
-                                    <div class="p-8 bg-slate-50/50 rounded-[2rem] border border-slate-100 flex items-center justify-between group hover:bg-white hover:shadow-xl hover:shadow-slate-200/30 transition-all">
-                                        <div class="flex items-center gap-6">
-                                            <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                <svg class="w-8 h-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                                            </div>
-                                            <div>
-                                                <p class="text-lg font-black text-slate-900">Loyers Total</p>
-                                                <div class="flex items-center gap-3 mt-1">
-                                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Aujourd'hui</span>
-                                                    <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                                                    <span class="px-2 py-0.5 bg-rose-50 text-rose-500 text-[8px] font-black rounded-md uppercase">Propriétaire</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <p class="text-2xl font-black text-slate-900 font-outfit tracking-tighter">3,500.00 DH</p>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Payé par : MOI</p>
-                                        </div>
-                                    </div>
+                                
+                                <div class="divide-y divide-slate-50">
+                                    @php
+                                        $staticExpenses = [
+                                            ['title' => 'Loyer Mensuel', 'amount' => 5000.00, 'date' => '01 Fév', 'cat' => 'Fixe', 'payer' => 'Admin'],
+                                            ['title' => 'Internet Fiber', 'amount' => 349.00, 'date' => '05 Fév', 'cat' => 'Internet', 'payer' => 'Admin'],
+                                            ['title' => 'Réparation Chauffe-eau', 'amount' => 450.00, 'date' => '12 Fév', 'cat' => 'Maintenance', 'payer' => 'Moi'],
+                                            ['title' => 'Achat Détergents', 'amount' => 120.00, 'date' => '15 Fév', 'cat' => 'Divers', 'payer' => 'Sara'],
+                                        ];
+                                    @endphp
 
-                                    <div class="p-8 bg-white rounded-[2rem] border border-slate-100 flex items-center justify-between group hover:shadow-xl transition-all">
-                                        <div class="flex items-center gap-6">
-                                            <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300">
-                                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                                            </div>
-                                            <div>
-                                                <p class="text-lg font-black text-slate-900">Internet Fibre</p>
-                                                <div class="flex items-center gap-3 mt-1">
-                                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">23 Fév</span>
-                                                    <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                                                    <span class="px-2 py-0.5 bg-indigo-50 text-indigo-500 text-[8px] font-black rounded-md uppercase tracking-tight">Virement</span>
+                                    @foreach($staticExpenses as $exp)
+                                        <div class="px-10 py-6 flex items-center justify-between group hover:bg-slate-50/50 transition-colors">
+                                            <div class="flex items-center gap-6">
+                                                <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center text-blue-600 font-black text-lg group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                                    {{ substr($exp['title'], 0, 1) }}
+                                                </div>
+                                                <div>
+                                                    <p class="text-base font-black text-slate-800">{{ $exp['title'] }}</p>
+                                                    <div class="flex items-center gap-2 mt-1">
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $exp['date'] }}</span>
+                                                        <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $exp['cat'] }}</span>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="text-right">
+                                                <p class="text-xl font-black text-slate-900 tracking-tight">{{ number_format($exp['amount'], 2) }} DH</p>
+                                                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Par {{ $exp['payer'] }}</p>
+                                            </div>
                                         </div>
-                                        <div class="text-right">
-                                            <p class="text-2xl font-black text-slate-900 font-outfit tracking-tighter">349.00 DH</p>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Payé par : MOI</p>
-                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="p-8 bg-slate-50 flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">Total mensuel</p>
+                                        <p class="text-2xl font-black text-slate-900 tracking-tight">5,919.00 <span class="text-xs font-medium text-slate-400 ml-0.5">DH</span></p>
                                     </div>
+                                    <button class="px-5 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 text-[10px] font-black rounded-xl uppercase tracking-widest transition-all">
+                                        Exporter PDF
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -353,226 +432,130 @@
                 </div>
 
             @elseif($tab === 'payments')
-                <!-- TAB: PAYMENTS (ENHANCED) -->
-                <div class="animate-fade-in space-y-12">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div>
-                            <h2 class="text-3xl font-black text-slate-900 tracking-tight font-outfit text-left">Validation des règlements</h2>
-                            <p class="text-slate-500 font-medium mt-1 text-left">Confirmez la réception du cash ou des virements des colocs.</p>
+                <!-- TAB: PAYMENTS (SIMPLE O NADI - PREMIUM & CLEAN) -->
+                <div class="animate-fade-in space-y-10">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div class="max-w-xl">
+                            <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight font-heading">Trésorerie & Encaissements</h2>
+                            <p class="text-slate-500 font-medium mt-1">Validez les paiements reçus et contrôlez la balance de chaque membre.</p>
                         </div>
-                        <div class="px-8 py-4 bg-green-50 border border-green-100 rounded-3xl flex items-center gap-4 shadow-sm shadow-green-100">
-                             <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-green-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-                             </div>
-                             <div>
-                                <p class="text-[10px] font-black text-green-700 uppercase tracking-widest">Trésorerie Actuelle</p>
-                                <p class="text-xl font-black text-slate-900">2,500.00 DH</p>
-                             </div>
+                        <div class="bg-slate-900 px-8 py-5 rounded-3xl text-white shadow-xl shadow-slate-200">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-80 leading-none">Balance Disponible</p>
+                            <p class="text-3xl font-black mt-1.5 tracking-tight">14,250.00 <span class="text-sm font-medium opacity-40 ml-0.5">DH</span></p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                        <div class="lg:col-span-5">
-                            <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl shadow-slate-200/50 border border-white">
-                                <h3 class="text-2xl font-black text-slate-900 mb-2 text-left">Nouveau Encaissement</h3>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10 text-left">Valider un règlement membre</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                        <!-- Simplified Validation Form -->
+                        <div class="lg:col-span-12 xl:col-span-5">
+                            <div class="bg-white p-10 rounded-3xl shadow-xl shadow-slate-100 border border-slate-50">
+                                <h3 class="text-xl font-black text-slate-900 mb-8 lowercase first-letter:uppercase">Valider un encaissement</h3>
                                 
-                                <form action="#" method="POST" class="space-y-8">
-                                    <div class="grid grid-cols-2 gap-6">
-                                        <div class="space-y-2">
-                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 text-left">Colocataire</label>
-                                            <div class="relative">
-                                                <select class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-3xl text-slate-900 focus:bg-white focus:ring-4 focus:ring-green-100 font-bold appearance-none cursor-pointer">
-                                                    @foreach($colocation->members as $member)
-                                                        @if($member->user_id !== $colocation->user_id) <option>{{ $member->user->name }}</option> @endif
-                                                    @endforeach
-                                                </select>
-                                                <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                                                </div>
-                                            </div>
+                                <form action="#" method="POST" class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div class="space-y-1.5">
+                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Colocataire</label>
+                                            <select class="w-full px-6 py-4 bg-slate-50 border-transparent rounded-2xl text-slate-900 focus:bg-white focus:ring-2 focus:ring-green-500/10 focus:border-green-500/20 font-bold transition-all">
+                                                @foreach($colocation->members as $member)
+                                                    @if($member->user_id !== $colocation->user_id) <option>{{ $member->user->name }}</option> @endif
+                                                @endforeach
+                                            </select>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 text-left text-left">Mode Payment</label>
-                                            <select class="w-full px-8 py-5 bg-slate-50 border-transparent rounded-3xl text-slate-900 focus:bg-white focus:ring-4 focus:ring-green-100 font-bold transition-all appearance-none cursor-pointer">
+                                        <div class="space-y-1.5">
+                                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Méthode</label>
+                                            <select class="w-full px-6 py-4 bg-slate-50 border-transparent rounded-2xl text-slate-900 focus:bg-white focus:ring-2 focus:ring-green-500/10 focus:border-green-500/20 font-bold transition-all">
                                                 <option>Espèces</option>
                                                 <option>Virement</option>
-                                                <option>Application</option>
                                             </select>
                                         </div>
                                     </div>
 
-                                    <div class="p-8 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 space-y-6">
-                                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 text-left">Sélectionner les frais réglés</label>
-                                        <div class="space-y-3 pb-2">
-                                            <label class="flex items-center p-5 bg-white rounded-3xl border border-slate-200 cursor-pointer group hover:border-green-400 transition-all shadow-sm">
-                                                <input type="checkbox" class="w-6 h-6 rounded-[0.5rem] border-slate-300 text-green-600 focus:ring-green-500 mr-4">
-                                                <div class="flex-1 text-left">
-                                                    <p class="text-sm font-black text-slate-900">Loyer Mars</p>
-                                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight font-outfit">Quote-part : 1,166 DH</p>
+                                    <div class="space-y-4">
+                                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Dettes à solder</label>
+                                        <div class="space-y-3">
+                                            <label class="flex items-center p-5 bg-slate-50 rounded-2xl border border-transparent cursor-pointer group hover:bg-white hover:border-green-500/20 hover:shadow-lg transition-all">
+                                                <input type="checkbox" class="w-5 h-5 rounded-lg border-slate-300 text-green-600 focus:ring-green-500/20 mr-4">
+                                                <div class="flex-1 flex justify-between items-center">
+                                                    <div>
+                                                        <p class="text-sm font-black text-slate-900">Loyer Mars</p>
+                                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Dû le 05 Mars</p>
+                                                    </div>
+                                                    <p class="text-base font-black text-green-600">1,166 DH</p>
                                                 </div>
                                             </label>
-                                            <label class="flex items-center p-5 bg-white rounded-3xl border border-slate-200 cursor-pointer group hover:border-green-400 transition-all shadow-sm">
-                                                <input type="checkbox" class="w-6 h-6 rounded-[0.5rem] border-slate-300 text-green-600 focus:ring-green-500 mr-4">
-                                                <div class="flex-1 text-left">
-                                                    <p class="text-sm font-black text-slate-900">Internet / Divers</p>
-                                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight font-outfit">Quote-part : 349 DH</p>
+
+                                            <label class="flex items-center p-5 bg-slate-50 rounded-2xl border border-transparent cursor-pointer group hover:bg-white hover:border-green-500/20 hover:shadow-lg transition-all">
+                                                <input type="checkbox" class="w-5 h-5 rounded-lg border-slate-300 text-green-600 focus:ring-green-500/20 mr-4">
+                                                <div class="flex-1 flex justify-between items-center">
+                                                    <div>
+                                                        <p class="text-sm font-black text-slate-900">Internet / Divers</p>
+                                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Dû Aujourd'hui</p>
+                                                    </div>
+                                                    <p class="text-base font-black text-green-600">320 DH</p>
                                                 </div>
                                             </label>
                                         </div>
                                     </div>
 
-                                    <button type="button" class="w-full py-6 bg-green-600 text-white font-black rounded-[2rem] hover:bg-green-700 transition shadow-2xl shadow-green-200 transform active:scale-[0.98] text-lg">
-                                        Confirmer le règlement ✨
+                                    <button type="button" class="w-full py-5 bg-green-600 text-white font-black rounded-2xl hover:bg-green-700 transition-all shadow-xl shadow-green-100 active:scale-95 text-sm uppercase tracking-widest flex items-center justify-center gap-3">
+                                        Confirmer le paiement
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                                     </button>
                                 </form>
                             </div>
                         </div>
 
-                        <div class="lg:col-span-7 space-y-8">
-                             <div class="bg-white p-12 rounded-[3.5rem] shadow-xl shadow-slate-200/50 border border-white">
-                                <h3 class="text-2xl font-black text-slate-900 mb-10 text-left">Derniers Encaissements</h3>
-                                <div class="space-y-8">
-                                    <div class="flex items-start gap-5 relative group">
-                                        <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center flex-shrink-0 text-green-600 border border-green-100 group-hover:bg-green-600 group-hover:text-white transition-all shadow-sm">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                                        </div>
-                                        <div class="flex-1 text-left">
-                                            <div class="flex justify-between items-start">
-                                                <p class="text-lg font-bold text-slate-600 leading-tight">
-                                                    <span class="text-slate-900 font-black">Yassine</span> a réglé pour <span class="text-slate-900 font-black">Loyer Mars</span>
-                                                </p>
-                                                <span class="text-xl font-black text-green-600 font-outfit">+1,166 DH</span>
+                        <!-- Recent Transactions (Refined List) -->
+                        <div class="lg:col-span-12 xl:col-span-7">
+                            <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-50 overflow-hidden">
+                                <div class="px-10 py-8 border-b border-slate-50 flex items-center justify-between">
+                                    <h3 class="text-lg font-black text-slate-900">Mouvements récents</h3>
+                                    <button class="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline">Voir tout</button>
+                                </div>
+                                
+                                <div class="divide-y divide-slate-50">
+                                    @php
+                                        $staticPayments = [
+                                            ['name' => 'Yassine', 'amount' => 1166, 'title' => 'Loyer Mars', 'date' => 'Il y a 2h', 'method' => 'Virement'],
+                                            ['name' => 'Sara', 'amount' => 320, 'title' => 'Internet', 'date' => 'Hier', 'method' => 'Espèces'],
+                                            ['name' => 'Amine', 'amount' => 1166, 'title' => 'Loyer Mars', 'date' => '23 Fév', 'method' => 'Virement'],
+                                            ['name' => 'Sara', 'amount' => 1166, 'title' => 'Loyer Fév', 'date' => '05 Fév', 'method' => 'Espèces'],
+                                        ];
+                                    @endphp
+
+                                    @foreach($staticPayments as $pay)
+                                        <div class="px-10 py-6 flex items-center justify-between group hover:bg-slate-50/50 transition-colors">
+                                            <div class="flex items-center gap-6">
+                                                <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center font-bold">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                                                </div>
+                                                <div>
+                                                    <p class="text-base font-black text-slate-800">{{ $pay['name'] }} <span class="text-slate-400 font-bold ml-1">•</span> <span class="text-slate-500 font-medium ml-1">{{ $pay['title'] }}</span></p>
+                                                    <div class="flex items-center gap-2 mt-1">
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $pay['date'] }}</span>
+                                                        <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $pay['method'] }}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="flex items-center gap-3 mt-2">
-                                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Hière • 21:30</span>
-                                                <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                                                <span class="px-2 py-0.5 bg-slate-50 text-[8px] font-black text-slate-500 rounded border border-slate-100 uppercase tracking-widest">Virement Bancaire</span>
+                                            <div class="text-right">
+                                                <p class="text-xl font-black text-green-600 tracking-tight">+{{ number_format($pay['amount'], 2) }} DH</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="h-[1px] bg-slate-50 w-full"></div>
+                                    @endforeach
+                                </div>
 
-                                    <div class="flex items-center gap-4 py-4 px-6 bg-slate-50 rounded-3xl border border-dashed border-slate-200 opacity-60">
-                                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-300">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div class="p-10 bg-slate-50">
+                                    <div class="p-8 bg-white rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+                                        <div class="text-center md:text-left">
+                                            <h4 class="text-lg font-black text-slate-900">Rapport Financier 📊</h4>
+                                            <p class="text-xs text-slate-500 font-medium mt-1">Générez un récapitulatif complet des comptes.</p>
                                         </div>
-                                        <p class="text-xs font-bold text-slate-400 italic">En attente de nouveaux versements...</p>
+                                        <button class="px-8 py-4 bg-slate-900 text-white font-black rounded-xl text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95 shadow-lg">
+                                            Générer le rapport PDF
+                                        </button>
                                     </div>
                                 </div>
-                             </div>
-
-                             <div class="bg-gradient-to-br from-green-600 to-emerald-800 p-10 rounded-[3rem] text-white shadow-2xl shadow-green-100 relative overflow-hidden group">
-                                <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
-                                <div class="flex items-center gap-6 relative z-10">
-                                    <div class="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/20">
-                                        <svg class="w-10 h-10 text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs font-black text-green-100 uppercase tracking-widest opacity-80 leading-none mb-2">Confiance Globally</p>
-                                        <p class="text-2xl font-black tracking-tight font-outfit">85% des charges confirmées</p>
-                                        <p class="text-[10px] mt-2 font-medium text-green-50 opacity-60 italic">Bravo boss! Votre colocation est saine financièrement.</p>
-                                    </div>
-                                </div>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-
-            @elseif($tab === 'chat')
-                <!-- TAB: GROUP CHAT (PREMIUM OWNER VERSION) -->
-                <div class="animate-fade-in bg-white rounded-[3rem] shadow-2xl border border-white overflow-hidden h-[750px] flex flex-col md:flex-row">
-                    <!-- Sidebar Membres (Desktop) -->
-                    <div class="hidden lg:flex w-72 border-r border-slate-50 flex-col bg-slate-50/20">
-                        <div class="p-8 border-b border-slate-50">
-                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">En ligne (3)</h4>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                             @foreach($colocation->members as $member)
-                                <div class="flex items-center gap-3 p-3 rounded-2xl hover:bg-white hover:shadow-sm transition-all cursor-pointer group relative">
-                                    <div class="relative">
-                                        <div class="w-10 h-10 bg-white rounded-xl border border-slate-100 flex items-center justify-center font-black text-slate-700 text-sm">
-                                            {{ substr($member->user->name, 0, 1) }}
-                                        </div>
-                                        <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-sm shadow-green-200"></div>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs font-black text-slate-800">{{ $member->user->name }}</p>
-                                        @if($member->user_id === $colocation->user_id)
-                                            <p class="text-[9px] font-bold text-rose-500">Boss (Vous)</p>
-                                        @else
-                                            <p class="text-[9px] font-bold text-green-500">Actif maintenant</p>
-                                        @endif
-                                    </div>
-                                    <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                    </div>
-                                </div>
-                             @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Chat Main Area -->
-                    <div class="flex-1 flex flex-col min-w-0">
-                        <div class="p-8 border-b border-slate-50 bg-white flex justify-between items-center relative z-20">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
-                                </div>
-                                <div>
-                                    <h3 class="font-black text-slate-900 text-lg uppercase tracking-tight">Group Chat EasyColoc</h3>
-                                    <p class="text-[10px] text-slate-400 font-bold tracking-widest">{{ $colocation->name }} • Dashboard Propriétaire</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="p-3 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="flex-1 p-8 overflow-y-auto space-y-10 bg-slate-50/50 backdrop-blur-sm bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5">
-                            <div class="flex flex-col items-center">
-                                <span class="px-6 py-2 bg-white text-slate-500 rounded-full text-[10px] font-black uppercase shadow-sm border border-slate-100 tracking-widest">Aujourd'hui, 23 Fév</span>
-                            </div>
-
-                            <div class="flex gap-4">
-                                <div class="w-10 h-10 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center text-white font-black shadow-lg shadow-blue-100">Y</div>
-                                <div class="space-y-2 max-w-[80%]">
-                                    <p class="text-[10px] font-black text-slate-400 ml-1 uppercase tracking-tighter text-left">Yassine mectoub • Membre</p>
-                                    <div class="bg-white p-5 rounded-3xl rounded-tl-none shadow-sm border border-slate-100 text-sm text-slate-700 leading-relaxed text-left relative group">
-                                        Salam tout le monde! Est-ce que quelqu'un a vu le dernier relevé d'électricité ?
-                                        <div class="absolute -right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button class="text-xs text-slate-300 hover:text-indigo-500">💡</button>
-                                        </div>
-                                    </div>
-                                    <span class="text-[9px] text-slate-300 font-bold ml-1 tracking-widest">10:15</span>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-4 justify-end">
-                                <div class="space-y-2 max-w-[80%] text-right">
-                                    <p class="text-[10px] font-black text-indigo-500 mr-1 uppercase tracking-tighter">Moi (Boss)</p>
-                                    <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 p-5 rounded-3xl rounded-tr-none shadow-2xl shadow-indigo-100 text-sm text-white leading-relaxed text-left">
-                                        Oui Yassine, je vais l'ajouter dans l'onglet Dépenses tout de suite. Sara a déjà réglé sa part d'ailleurs!
-                                    </div>
-                                    <span class="text-[9px] text-slate-300 font-bold mr-1 tracking-widest">10:18 • LU</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-8 bg-white border-t border-slate-50 relative z-20">
-                            <div class="relative flex items-center gap-4">
-                                <div class="flex-1 relative flex items-center">
-                                    <div class="absolute left-6 text-slate-300 group-focus-within:text-indigo-500 transition-colors">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                    </div>
-                                    <input type="text" placeholder="Ecrivez à vos colocs..." class="w-full pl-16 pr-6 py-5 bg-slate-50 border-transparent rounded-[1.8rem] text-slate-900 focus:bg-white focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all font-medium text-sm">
-                                </div>
-                                <button class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-100 hover:scale-105 active:scale-95 transition-all">
-                                    <svg class="w-6 h-6 rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-                                </button>
                             </div>
                         </div>
                     </div>
