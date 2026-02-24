@@ -30,6 +30,12 @@ class Colocation extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+
 }
 
 
