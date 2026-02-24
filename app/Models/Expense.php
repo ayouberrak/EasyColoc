@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
+    protected $table = 'expenses';
+
     protected $fillable = [
-        'id',
         'titre',
         'amount',
         'date',
@@ -20,8 +21,8 @@ class Expense extends Model
         return $this->belongsTo(User::class,'user_id');
     }
 
-    public function category(){
-        return $this->belongsTo(Category::class , 'category_id');
+    public function category(){ 
+        return $this->belongsTo(Category::class);
     }
 
     public function colocation(){
