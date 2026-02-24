@@ -9,27 +9,29 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'ban'])->group(function(){
+
     Route::get('/dashboard', [\App\Http\Controllers\MemberDashboardController::class, 'index'])->name('dashboard');
-});
-
-
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Colocation Routes
     Route::get('/colocations/create', function () {
         return view('colocations.create');
     })->name('colocations.create');
 
     Route::post('/colocations/store' , [ColocationController::class , 'store' ])->name('colocations.store');
+    Route::post('/colocations/invite' , [ColocationController::class , 'invite' ])->name('colocations.invite');
+    
+    Route::get('/invitations/{token}', [ColocationController::class, 'showInvitation'])->name('invitations.show');
+    Route::post('/invitations/{token}/accept', [ColocationController::class, 'acceptInvitation'])->name('invitations.accept');
+    Route::post('/invitations/{token}/decline', [ColocationController::class, 'declineInvitation'])->name('invitations.decline');
 
-    // Owner Routes
     Route::get('/owner/dashboard', [\App\Http\Controllers\OwnerDashboardController::class, 'index'])->name('owner.dashboard');
+
+    Route::post('/expense/store', [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expense.store');
+
 });
 
-// Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
