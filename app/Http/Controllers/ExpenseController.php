@@ -5,6 +5,8 @@ use App\Models\Expense;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
+use App\Models\Credit;
+use App\Models\Colocation;
 
 class ExpenseController extends Controller
 {
@@ -28,6 +30,46 @@ class ExpenseController extends Controller
             'user_id' => $user->id
         ]);
 
-        return back()->with('success', 'expense created');
+        $colocation = Colocation::with('members')->findOrFail($request->colocation_id);
+        $members = $colocation->members;
+        $memberCount = $members->count();
+
+        if ($memberCount > 1) {
+            $share = $request->amount / $memberCount;
+
+            foreach ($members as $member) {
+                if ($member->user_id == $user->id) continue;
+
+                $reverseDebt = Credit::where('colocation_id', $colocation->id)
+                    ->where('debtor_id', $user->id)       
+                    ->where('creditor_id', $member->user_id)
+                    ->first();
+
+                if ($reverseDebt) {
+                    if ($reverseDebt->amount > $share) {
+                        $reverseDebt->decrement('amount', $share);
+                    } else {
+                        $remaining = $share - $reverseDebt->amount;
+                        $reverseDebt->delete();
+                        if ($remaining > 0) {
+                            Credit::create([
+                                'colocation_id' => $colocation->id,
+                                'debtor_id' => $member->user_id,
+                                'creditor_id' => $user->id,
+                                'amount' => $remaining
+                            ]);
+                        }
+                    }
+                } else {
+                    $debt = Credit::firstOrCreate(
+                        ['colocation_id' => $colocation->id, 'debtor_id' => $member->user_id, 'creditor_id' => $user->id],
+                        ['amount' => 0]
+                    );
+                    $debt->increment('amount', $share);
+                }
+            }
+        }
+
+        return back()->with('success', 'Dépense enregistrée et partagée !');
     }
 }
