@@ -30,6 +30,7 @@ Route::middleware(['auth', 'ban'])->group(function(){
 
     Route::post('/expense/store', [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expense.store');
 
+    Route::post('/payment/store',[\App\Http\Controllers\PaymentController::class,'store'])->name('payment.store');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
