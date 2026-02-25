@@ -17,19 +17,15 @@
         @stack('styles')
     </head>
     <body class="font-sans antialiased text-slate-900 selection:bg-blue-100 selection:text-blue-900">
-        <div class="min-h-screen bg-[#f8fafc] relative overflow-x-hidden">
-            <!-- Background Decoration -->
-            <div class="absolute top-0 right-0 -z-0 w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-[120px] -mr-48 -mt-48 pointer-events-none"></div>
-            <div class="absolute bottom-0 left-0 -z-0 w-[500px] h-[500px] bg-indigo-50/50 rounded-full blur-[120px] -ml-48 -mb-48 pointer-events-none"></div>
-
+        <div class="min-h-screen bg-slate-50 flex flex-col">
             @include('layouts.navigation')
 
-            <div class="relative z-10">
+            <div class="flex-1">
                 <!-- Page Heading -->
                 @isset($header)
-                    <header class="bg-white/50 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            <h2 class="font-heading font-black text-2xl text-slate-900 leading-tight">
+                    <header class="bg-white border-b border-slate-200">
+                        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                            <h2 class="font-bold text-xl text-slate-800 leading-tight">
                                 {{ $header }}
                             </h2>
                         </div>
@@ -37,7 +33,7 @@
                 @endisset
 
                 <!-- Page Content -->
-                <main class="animate-fade-in">
+                <main>
                     {{ $slot }}
                 </main>
             </div>
