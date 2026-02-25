@@ -9,7 +9,7 @@ class Payment extends Model
     protected $fillable = [
         'colocation_id',
         'payer_id',
-        'expense_id',
+        'credit',
         'paid_at'
     ];
 
@@ -20,6 +20,6 @@ class Payment extends Model
 
 
     public function payer(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'payer_id');
     }
 }
