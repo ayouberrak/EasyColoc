@@ -35,6 +35,14 @@ class MemberDashboardController extends Controller
         }
 
         $categories = $this->getAllCategories();
-        return view('colocations.member', compact('colocation', 'tab', 'categories'));
+        $debts = \App\Models\Credit::with(['debtor', 'creditor'])->where('colocation_id', $colocation->id)->get();
+
+        return view('colocations.member', compact('colocation', 'tab', 'categories', 'debts'));
+    }
+
+
+
+    public function leaveSeul(){
+        
     }
 }
