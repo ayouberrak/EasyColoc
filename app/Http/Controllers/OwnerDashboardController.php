@@ -23,7 +23,7 @@ public function index(Request $request)
 
     $tab = $request->tab ?? 'dashboard';
 
-    $lien = ['dashboard', 'members', 'payments'];
+    $lien = ['dashboard', 'members', 'expenses', 'payments'];
 
     if (!in_array($tab, $lien)) {
         $tab = 'dashboard';
@@ -44,12 +44,31 @@ public function index(Request $request)
         ->where('status', 'pending')
         ->get();
 
+    $expenses = Expense::where('colocation_id', $colocation->id)->get();
+    $payments = Payment::with(['user', 'expense'])->where('colocation_id', $colocation->id)->orderBy('created_at', 'desc')->get();
+
+    $totalExp = $expenses->sum('amount');
+    $totalPay = $payments->sum('amount');
+
+    $balance = $totalPay - $totalExp;
+    
+
+    $categories = \App\Models\Category::all();
+    $debts = \App\Models\Credit::with(['debtor', 'creditor'])->where('colocation_id', $colocation->id)->get();
+
+
     return view('colocations.owner', [
         'colocation' => $colocation,
         'tab' => $tab,
         'potentialMembers' => $num,
         'search' => $search,
-        'pendingInvitations' => $pendingInvitations
+        'pendingInvitations' => $pendingInvitations,
+        'balance' => $balance,
+        'totalExp' => $totalExp,
+        'totalPay' => $totalPay,
+        'payments' => $payments,
+        'categories' => $categories,
+        'debts' => $debts
     ]);
 }
 }
