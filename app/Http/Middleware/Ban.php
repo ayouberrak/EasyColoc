@@ -19,7 +19,7 @@ class Ban
     {
         if($request->user() && $request->user()->is_banned){
             Auth::logout();
-            return redirect()->route('login')->with('error','tbanitttttttiiiiiii');
+            return redirect()->route('login')->with('error','tu est bani');
         }
         return $next($request);
     }
