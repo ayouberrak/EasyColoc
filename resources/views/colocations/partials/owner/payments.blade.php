@@ -56,7 +56,7 @@
                                 <input type="hidden" name="credit_id" value="{{ $credit->id }}">
                                 <input type="hidden" name="method" value="cash">
                                 <button type="submit" class="px-3 py-1.5 bg-white hover:bg-slate-900 hover:text-white text-indigo-600 text-[10px] font-bold rounded-lg border border-slate-200 transition-all active:scale-95 shadow-sm">
-                                    Régler
+                                    Mask as Payee
                                 </button>
                             </form>
                         </div>
