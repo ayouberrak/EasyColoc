@@ -53,8 +53,45 @@
         <!-- History -->
         <div class="lg:col-span-7">
             <div class="card-simple !p-0 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
-                    <h3 class="font-bold text-slate-900">Historique récent</h3>
+                <div class="p-8 border-b border-slate-100 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+                    <h3 class="text-xl font-black text-slate-900 tracking-tight">Journal des frais</h3>
+                    <form action="{{ url()->current() }}" method="GET" class="flex items-center gap-3">
+                        <input type="hidden" name="tab" value="expenses">
+                        <div class="relative group">
+                            <select name="month" class="appearance-none pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold text-slate-500 uppercase tracking-widest focus:ring-4 focus:ring-blue-100/50 transition-all cursor-pointer group-hover:bg-white group-hover:border-blue-100">
+                                <option value="">Mois</option>
+                                @php
+                                    $months = [
+                                        '1' => 'Jan', '2' => 'Feb', '3' => 'Mar', '4' => 'Apr',
+                                        '5' => 'May', '6' => 'Jun', '7' => 'Jul', '8' => 'Aug',
+                                        '9' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'
+                                    ];
+                                @endphp
+                                @foreach($months as $num => $name)
+                                    <option value="{{ $num }}" {{ request('month') == $num ? 'selected' : '' }}>
+                                        {{ $name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <select name="year" class="appearance-none pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold text-slate-500 uppercase tracking-widest focus:ring-4 focus:ring-blue-100/50 transition-all cursor-pointer group-hover:bg-white group-hover:border-blue-100">
+                                <option value="">Année</option>
+                                @php $currentYear = date('Y'); @endphp
+                                <option value="{{ $currentYear }}" {{ request('year') == $currentYear ? 'selected' : '' }}>{{ $currentYear }}</option>
+                                <option value="{{ $currentYear - 1 }}" {{ request('year') == ($currentYear - 1) ? 'selected' : '' }}>{{ $currentYear - 1 }}</option>
+                            </select>
+                            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+                        </div>
+                        <button type="submit" class="p-2.5 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition-all shadow-lg shadow-slate-100 active:scale-95 group">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </button>
+                    </form>
                 </div>
                 <div class="divide-y divide-slate-50">
                     @forelse($colocation->expenses->sortByDesc('date') as $expense)
@@ -65,10 +102,13 @@
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-sm font-bold text-slate-900 truncate">{{ $expense->titre }}</p>
-                                    <div class="flex items-center gap-2 mt-0.5">
-                                        <span class="text-[9px] font-bold text-slate-400 uppercase">{{ \Carbon\Carbon::parse($expense->date)->format('d M') }}</span>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 bg-slate-100/50 rounded-md">
+                                            <svg class="w-2.5 h-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                            <span class="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">{{ date('d M, Y', strtotime($expense->date)) }}</span>
+                                        </div>
                                         <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                                        <span class="text-[9px] font-bold text-blue-600 uppercase">{{ $expense->payer->name }}</span>
+                                        <span class="text-[9px] font-extrabold text-blue-600 uppercase italic">{{ $expense->payer->name }}</span>
                                     </div>
                                 </div>
                             </div>
