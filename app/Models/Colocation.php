@@ -22,7 +22,7 @@ class Colocation extends Model
 
     public function members()
     {
-        return $this->hasMany(ColocationMember::class);
+        return $this->hasMany(ColocationMember::class)->where('left_at', null);
     }
 
     public function owner()
