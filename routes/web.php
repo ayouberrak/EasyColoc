@@ -27,10 +27,16 @@ Route::middleware(['auth', 'ban'])->group(function(){
     Route::post('/invitations/{token}/decline', [ColocationController::class, 'declineInvitation'])->name('invitations.decline');
 
     Route::get('/owner/dashboard', [\App\Http\Controllers\OwnerDashboardController::class, 'index'])->name('owner.dashboard');
+    Route::post('/owner/colocation/cancel', [\App\Http\Controllers\OwnerDashboardController::class, 'anullerColocation'])->name('owner.colocation.cancel');
 
     Route::post('/expense/store', [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expense.store');
 
     Route::post('/payment/store',[\App\Http\Controllers\PaymentController::class,'store'])->name('payment.store');
+
+    Route::post('/leave/colo' , [\App\Http\Controllers\MemberDashboardController::class , 'leaveSeul'])->name('leave.colo');
+    Route::post('/colocations/owner/{member}', [ColocationController::class, 'transferOwnership'])->name('colocations.transfer-ownership');
+
+    Route::post('/colocations/remove/{member}', [\App\Http\Controllers\MemberDashboardController::class, 'leaveByOwner'])->name('colocations.owner.remove');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
