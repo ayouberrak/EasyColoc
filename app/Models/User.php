@@ -62,7 +62,7 @@ class User extends Authenticatable
 
     public function ownedColocations()
     {
-        return $this->hasOne(Colocation::class, 'user_id');
+        return $this->hasOne(Colocation::class, 'user_id')->where('status', 'active');
     }
 
     public function isOwner()
