@@ -25,6 +25,6 @@ class PaymentController extends Controller
 
         $credit->delete();
 
-        return back()->with('success', 'Règlement enregistré avec succès !');
+        return back()->with('success', 'payee ');
     }
 }
