@@ -67,12 +67,48 @@
         <!-- Expense Log -->
         <div class="lg:col-span-7">
             <div class="card-simple p-8 md:p-10 bg-white border border-slate-100 overflow-hidden">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-xl font-bold text-slate-900 tracking-tight">Journal des dépenses</h3>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Récent</span>
+                <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-10">
+                    <h3 class="text-2xl font-black text-slate-900 tracking-tight">Journal des dépenses</h3>
+                    <form action="{{ url()->current() }}" method="GET" class="flex flex-wrap items-center gap-3">
+                        <input type="hidden" name="tab" value="expenses">
+                        <div class="relative group">
+                            <select name="month" class="appearance-none pl-5 pr-12 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-[11px] font-extrabold text-slate-600 uppercase tracking-widest focus:ring-4 focus:ring-blue-100/50 transition-all cursor-pointer group-hover:bg-white group-hover:border-blue-100 group-hover:shadow-lg group-hover:shadow-blue-50/50">
+                                <option value="">Mois</option>
+                                @php
+                                    $months = [
+                                        '1' => 'Janvier', '2' => 'Février', '3' => 'Mars', '4' => 'Avril',
+                                        '5' => 'Mai', '6' => 'Juin', '7' => 'Juillet', '8' => 'Août',
+                                        '9' => 'Septembre', '10' => 'Octobre', '11' => 'Novembre', '12' => 'Décembre'
+                                    ];
+                                @endphp
+                                @foreach($months as $num => $name)
+                                    <option value="{{ $num }}" {{ request('month') == $num ? 'selected' : '' }}>
+                                        {{ $name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-500 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <select name="year" class="appearance-none pl-5 pr-12 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-[11px] font-extrabold text-slate-600 uppercase tracking-widest focus:ring-4 focus:ring-blue-100/50 transition-all cursor-pointer group-hover:bg-white group-hover:border-blue-100 group-hover:shadow-lg group-hover:shadow-blue-50/50">
+                                <option value="">Année</option>
+                                @php $currentYear = date('Y'); @endphp
+                                <option value="{{ $currentYear }}" {{ request('year') == $currentYear ? 'selected' : '' }}>{{ $currentYear }}</option>
+                                <option value="{{ $currentYear - 1 }}" {{ request('year') == ($currentYear - 1) ? 'selected' : '' }}>{{ $currentYear - 1 }}</option>
+                            </select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-500 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+                        </div>
+                        <button type="submit" class="p-4 bg-slate-900 text-white rounded-2xl hover:bg-blue-600 transition-all shadow-xl shadow-slate-100 hover:shadow-blue-200 active:scale-95 group">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </button>
+                    </form>
                 </div>
                 <div class="space-y-4">
-                    @forelse($colocation->expenses->sortByDesc('date')->take(10) as $expense)
+                    @forelse($expenses as $expense)
                         <div class="p-6 bg-slate-50/50 rounded-2xl border border-slate-50 flex items-center justify-between hover:bg-white hover:shadow-xl hover:shadow-blue-50/20 transition-all">
                             <div class="flex items-center gap-5">
                                 <div class="w-14 h-14 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center font-bold text-blue-600">
@@ -80,10 +116,13 @@
                                 </div>
                                 <div>
                                     <p class="text-base font-bold text-slate-900 tracking-tight">{{ $expense->titre }}</p>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ \Carbon\Carbon::parse($expense->date)->format('d M') }}</span>
+                                    <div class="flex items-center gap-2 mt-1.5">
+                                        <div class="flex items-center gap-1.5 px-2 py-0.5 bg-slate-100/50 rounded-md">
+                                            <svg class="w-2.5 h-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                            <span class="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">{{ date('d M, Y', strtotime($expense->date)) }}</span>
+                                        </div>
                                         <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                                        <span class="px-2 py-0.5 {{ $expense->user_id === Auth::id() ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500' }} text-[8px] font-bold rounded-md uppercase">
+                                        <span class="px-2 py-0.5 {{ $expense->user_id === Auth::id() ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500' }} text-[8px] font-black rounded-md uppercase tracking-wider">
                                             {{ $expense->user_id === Auth::id() ? 'Moi' : $expense->payer->name }}
                                         </span>
                                     </div>
