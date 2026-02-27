@@ -18,6 +18,27 @@
     <!-- Hero Section -->
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            @if(session('success'))
+                <div class="mb-6 animate-fade-in">
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                            <span class="text-sm font-semibold">{{ session('success') }}</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-6 animate-fade-in">
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span class="text-sm font-semibold">{{ session('error') }}</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="flex flex-col lg:flex-row items-center gap-16">
                 <div class="text-left max-w-2xl lg:w-1/2">
                     <h1 class="text-5xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight tracking-tight">
