@@ -2,7 +2,7 @@
 <div class="animate-fade-in space-y-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-slate-900">Bonjour, {{ Auth::user()->name }} 👋</h1>
+            <h1 class="text-3xl font-bold text-slate-900">Bonjour, {{ Auth::user()->name }} </h1>
             <p class="text-slate-500 font-medium">Gérez votre colocation <span class="text-blue-600 font-bold">{{ $colocation->name }}</span>.</p>
         </div>
     </div>
@@ -64,36 +64,69 @@
         <div class="divide-y divide-slate-50">
             @foreach($colocation->members as $member)
                 @php 
-                    if($member->user_id === Auth::id()) continue; 
-                    
                     $toMe = $debts->where('debtor_id', $member->user_id)->where('creditor_id', Auth::id())->first();
                     $fromMe = $debts->where('debtor_id', Auth::id())->where('creditor_id', $member->user_id)->first();
                     $balance = ($toMe ? $toMe->amount : 0) - ($fromMe ? $fromMe->amount : 0);
+                    $isSelf = $member->user_id === Auth::id();
                 @endphp
-                <div class="p-6 flex items-center justify-between hover:bg-slate-50/50 transition-all">
+                <div class="p-6 flex items-center justify-between hover:bg-slate-50/80 transition-all group {{ $isSelf ? 'bg-blue-50/20' : '' }}">
                     <div class="flex items-center gap-6">
-                        <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center font-bold text-slate-800 text-xl border border-slate-100 shadow-sm">
-                            {{ substr($member->user->name, 0, 1) }}
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center font-black text-slate-800 text-2xl border border-slate-100 shadow-sm group-hover:rotate-2 transition-transform">
+                                {{ substr($member->user->name, 0, 1) }}
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.5 bg-amber-400 text-white text-[8px] font-black rounded-lg border-2 border-white shadow-sm ring-1 ring-amber-100">
+                                <svg class="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                {{ $member->reputation ?? 0 }}
+                            </div>
                         </div>
                         <div>
-                            <p class="text-lg font-bold text-slate-900 tracking-tight">{{ $member->user->name }}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Colocataire</span>
+                            <div class="flex items-center gap-2.5">
+                                <p class="text-xl font-black text-slate-900 tracking-tight">{{ $member->user->name }}</p>
+                                @if($isSelf)
+                                    <span class="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-black rounded-md uppercase tracking-widest shadow-lg shadow-blue-100 italic">Proprio</span>
+                                @endif
+                            </div>
+                            <div class="flex items-center gap-3 mt-1.5">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Membre</span>
                                 <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                                <span class="text-[9px] font-bold uppercase tracking-widest {{ $balance > 0 ? 'text-green-600' : ($balance < 0 ? 'text-red-500' : 'text-slate-400') }}">
-                                    {{ $balance > 0 ? 'Payé en plus' : ($balance < 0 ? 'En attente' : 'À jour') }}
+                                <span class="text-[10px] font-extrabold uppercase tracking-widest {{ $isSelf ? 'text-blue-500' : ($balance > 0 ? 'text-emerald-600' : ($balance < 0 ? 'text-rose-500' : 'text-slate-400')) }}">
+                                    @if($isSelf)
+                                        <span class="flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                            En ligne
+                                        </span>
+                                    @else
+                                        {{ $balance > 0 ? 'il vous doit' : ($balance < 0 ? 'à régulariser' : 'à jour') }}
+                                    @endif
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-xl font-bold {{ $balance > 0 ? 'text-green-600' : ($balance < 0 ? 'text-red-600' : 'text-slate-400') }} tracking-tight">
-                            {{ number_format(abs($balance), 2) }} <span class="text-[10px] font-medium opacity-60">DH</span>
+                    @if(!$isSelf)
+                        <div class="text-right flex flex-col items-end gap-1">
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-2xl font-black {{ $balance > 0 ? 'text-emerald-600' : ($balance < 0 ? 'text-rose-600' : 'text-slate-400') }} tracking-tighter">
+                                    {{ number_format(abs($balance), 2) }}
+                                </span>
+                                <span class="text-[11px] font-bold text-slate-400 uppercase">DH</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-md {{ $balance > 0 ? 'bg-emerald-50' : ($balance < 0 ? 'bg-rose-50' : 'bg-slate-50') }}">
+                                @if($balance > 0)
+                                    <svg class="w-2.5 h-2.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+                                @elseif($balance < 0)
+                                    <svg class="w-2.5 h-2.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                                @endif
+                                <p class="text-[9px] font-black uppercase tracking-widest {{ $balance > 0 ? 'text-emerald-600' : ($balance < 0 ? 'text-rose-500' : 'text-slate-400') }}">
+                                    {{ $balance > 0 ? 'doit vous régler' : ($balance < 0 ? 'vous lui devez' : 'équilibre parfait') }}
+                                </p>
+                            </div>
                         </div>
-                        <p class="text-[9px] font-bold uppercase tracking-widest {{ $balance > 0 ? 'text-green-400' : ($balance < 0 ? 'text-red-400' : 'text-slate-300') }}">
-                            {{ $balance > 0 ? 'il vous doit' : ($balance < 0 ? 'vous lui devez' : '-') }}
-                        </p>
-                    </div>
+                    @else
+                        <div class="hidden md:flex flex-col items-end opacity-20">
+                            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04M12 2.944a11.955 11.955 0 01-8.618 3.04M12 2.944V21m0-18.056c4.959 0 9.047 3.242 10.432 7.745M4.432 10.689C5.817 6.186 9.905 2.944 14.864 2.944" /></svg>
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>
@@ -184,8 +217,11 @@
             <h3 class="text-base font-bold text-slate-900">Zone de danger</h3>
             <p class="text-slate-500 text-xs mt-0.5">La suppression est irréversible.</p>
         </div>
-        <button type="button" class="px-4 py-2 bg-white text-red-600 border border-red-200 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all">
-            Supprimer la Colocation
-        </button>
+        <form action="{{ route('owner.colocation.cancel') }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette colocation ? Cette action est irréversible.');">
+            @csrf
+            <button type="submit" class="px-4 py-2 bg-white text-red-600 border border-red-200 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all">
+                Supprimer la Colocation
+            </button>
+        </form>
     </div>
 </div>
