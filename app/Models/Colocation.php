@@ -35,7 +35,10 @@ class Colocation extends Model
         return $this->hasMany(Expense::class);
     }
 
-
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }
 
 
