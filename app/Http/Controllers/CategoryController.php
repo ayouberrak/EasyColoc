@@ -18,9 +18,8 @@ class CategoryController extends Controller
 
         $colocation = Colocation::findOrFail($request->colocation_id);
 
-        // Ensure user is the owner of the colocation
         if ($colocation->user_id !== Auth::id()) {
-            return back()->with('error', 'Non autorisé.');
+            return back()->with('error', 'tu n est pas owner');
         }
 
         Category::create([
@@ -28,23 +27,17 @@ class CategoryController extends Controller
             'colocation_id' => $colocation->id
         ]);
 
-        return back()->with('success', 'Catégorie ajoutée avec succès.');
+        return back();
     }
 
     public function destroy(Category $category)
     {
-        // Ensure user is the owner of the colocation
         if ($category->colocation->user_id !== Auth::id()) {
-            return back()->with('error', 'Non autorisé.');
-        }
-
-        // Optional: Check if category is used in expenses
-        if ($category->expence()->exists()) {
-             return back()->with('error', 'Cette catégorie est utilisée et ne peut pas être supprimée.');
+            return back()->with('error', 'tu n est pas owner');
         }
 
         $category->delete();
 
-        return back()->with('success', 'Catégorie supprimée avec succès.');
+        return back();
     }
 }
