@@ -8,8 +8,13 @@ class Category extends Model
 {
     protected $table = 'categories';
     protected $fillable =[
-        'name'
+        'name',
+        'colocation_id'
     ];
+
+    public function colocation(){
+        return $this->belongsTo(Colocation::class);
+    }
 
 
     public function expence(){
