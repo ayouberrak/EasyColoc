@@ -25,6 +25,6 @@ class PaymentController extends Controller
 
         $credit->delete();
 
-        return back()->with('success', 'payee ');
+        return back()->with('success', 'payee');
     }
 }
