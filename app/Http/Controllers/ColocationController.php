@@ -21,6 +21,11 @@ class ColocationController extends Controller
             'description' => 'required|string'
         ]);
 
+        $user = Auth::user();
+        if (!$user->is_global_admin && $user->activeMember()->exists()) {
+            return back()->with('error', 'Vous appartenez déjà à une colocation.');
+        }
+
         $colo = Colocation::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -89,6 +94,10 @@ class ColocationController extends Controller
             return back()->with('error', 'email non autorise.');
         }
 
+        if (!$user->is_global_admin && $user->activeMember()->exists()) {
+            return redirect()->route('dashboard')->with('error', 'Vous avez déjà une colocation active.');
+        }
+
         ColocationMember::create([
             'colocation_id' => $invi->colocation_id,
             'user_id' => $user->id,
@@ -122,5 +131,11 @@ class ColocationController extends Controller
         $member->update(['role' => 'owner']);
 
         return redirect()->route('dashboard')->with('success', 'Propriété transférée avec succès.');
+    }
+
+    public function myColocations()
+    {
+        $memberships = Auth::user()->member()->with('colocation.owner')->get();
+        return view('colocations.my-history', compact('memberships'));
     }
 }
