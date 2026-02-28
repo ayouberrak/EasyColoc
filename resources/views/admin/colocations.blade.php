@@ -46,7 +46,7 @@
                         </div>
                     </td>
                     <td class="px-8 py-5">
-                        <span class="text-sm font-medium text-slate-600">{{ $coloc->owner->name ?? 'Sans propriétaire' }}</span>
+                        <span class="text-sm font-medium text-slate-600">{{ $coloc->owner->name}}</span>
                     </td>
                     <td class="px-8 py-5">
                         <div class="flex items-center gap-2">
