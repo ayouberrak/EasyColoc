@@ -129,12 +129,6 @@
             @auth
                 <a href="{{ route('my-colocations') }}" class="block px-3 py-2 rounded-md text-base font-semibold {{ request()->routeIs('my-colocations') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }} transition-all">Mes Colocations</a>
 
-                @if(Auth::user()->is_global_admin)
-                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-semibold {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }} transition-all">
-                        {{ __('Admin Panel') }}
-                    </a>
-                @endif
-
                 @if(Auth::user()->activeMember && !Auth::user()->isOwner())
                     <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-md text-base font-semibold {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }} transition-all">
                         {{ __('My Colocation') }}
