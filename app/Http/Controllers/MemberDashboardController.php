@@ -19,8 +19,17 @@ class MemberDashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Récupérer le membre actif
-        $member = $this->getActiveMember($user);
+        // Récupérer toutes les participations actives
+        $activeMemberships = ColocationMember::where('user_id', $user->id)
+            ->whereNull('left_at')
+            ->get();
+
+        if ($activeMemberships->isEmpty()) {
+            return redirect()->route('home');
+        }
+
+        // Si admin souhaite switcher ou par défaut
+        $member = $this->getSelectedMember($user, $activeMemberships, $request->colocation_id);
 
         if (!$member) {
             return redirect()->route('home');
@@ -29,33 +38,46 @@ class MemberDashboardController extends Controller
         $colocation = $member->colocation;
         $tab = $this->getTab($request->tab, ['dashboard', 'members', 'expenses']);
 
-        $categories = $this->getAllCategories();
+        $categories = $this->getAllCategories($colocation->id);
         $debts = $this->getDebts($colocation->id);
 
         $members = $this->getMembersWithOwner($colocation);
 
         $expenses = $this->getExpenses($colocation, $request->month, $request->year);
 
+        $userDebts = [];
+        if ($tab === 'payments') {
+            $userDebts = Credit::with('creditor')
+                ->where('colocation_id', $colocation->id)
+                ->where('debtor_id', $user->id)
+                ->get();
+        }
+
         return view('colocations.member', compact(
-            'colocation', 'tab', 'categories', 'debts', 'expenses'
+            'colocation', 'tab', 'categories', 'debts', 'expenses', 'activeMemberships', 'userDebts'
         ));
     }
 
-    private function getActiveMember($user)
+    private function getSelectedMember($user, $activeMemberships, $requestedColocationId)
     {
-        return ColocationMember::where('user_id', $user->id)
-            ->whereNull('left_at')
-            ->first();
+        if ($user->is_global_admin && $requestedColocationId) {
+            return $activeMemberships->firstWhere('colocation_id', $requestedColocationId);
+        }
+
+        return $activeMemberships->first();
     }
 
     private function getTab($tab, $allowedTabs)
     {
-        return in_array($tab, $allowedTabs) ? $tab : 'dashboard';
+        $allTabs = array_merge($allowedTabs, ['payments']);
+        return in_array($tab, $allTabs) ? $tab : 'dashboard';
     }
 
-    private function getAllCategories()
+    private function getAllCategories($colocationId)
     {
-        return Category::all();
+        return Category::where('colocation_id', $colocationId)
+            ->orWhereNull('colocation_id')
+            ->get();
     }
 
 
