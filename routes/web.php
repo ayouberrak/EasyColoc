@@ -3,6 +3,16 @@
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\MemberDashboardController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OwnerDashboardController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ColocationMemberController;
+use App\Http\Controllers\ExportController;
 
 Route::get('/', function () {
     return view('home');
@@ -10,7 +20,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'ban'])->group(function(){
 
-    Route::get('/dashboard', [\App\Http\Controllers\MemberDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -26,33 +36,37 @@ Route::middleware(['auth', 'ban'])->group(function(){
     Route::post('/invitations/{token}/accept', [ColocationController::class, 'acceptInvitation'])->name('invitations.accept');
     Route::post('/invitations/{token}/decline', [ColocationController::class, 'declineInvitation'])->name('invitations.decline');
 
-    Route::get('/owner/dashboard', [\App\Http\Controllers\OwnerDashboardController::class, 'index'])->name('owner.dashboard');
-    Route::post('/owner/colocation/cancel', [\App\Http\Controllers\OwnerDashboardController::class, 'anullerColocation'])->name('owner.colocation.cancel');
+    Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index'])->name('owner.dashboard');
+    Route::post('/owner/colocation/cancel', [OwnerDashboardController::class, 'anullerColocation'])->name('owner.colocation.cancel');
+    Route::get('/owner/colocation/export-pdf', [ExportController::class, 'exportColocationPdf'])->name('owner.colocation.export-pdf');
 
     Route::get('/my-colocations', [ColocationController::class, 'myColocations'])->name('my-colocations');
 
-    Route::post('/expense/store', [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expense.store');
+    Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expense.store');
 
-    Route::post('/payment/store',[\App\Http\Controllers\PaymentController::class,'store'])->name('payment.store');
+    Route::post('/payment/store',[PaymentController::class,'store'])->name('payment.store');
 
-    Route::post('/leave/colo' , [\App\Http\Controllers\MemberDashboardController::class , 'leaveSeul'])->name('leave.colo');
+    Route::post('/leave/colo' , [MemberDashboardController::class , 'leaveSeul'])->name('leave.colo');
     Route::post('/colocations/owner/{member}', [ColocationController::class, 'transferOwnership'])->name('colocations.transfer-ownership');
 
-    Route::post('/colocations/remove/{member}', [\App\Http\Controllers\MemberDashboardController::class, 'leaveByOwner'])->name('colocations.owner.remove');
+    Route::post('/colocations/remove/{member}', [MemberDashboardController::class, 'leaveByOwner'])->name('colocations.owner.remove');
 
-    Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
-    Route::delete('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    Route::get('/chat/{colocationId}', [ChatController::class, 'fetchMessages'])->name('chat.fetch');
+    Route::post('/chat', [ChatController::class, 'sendMessage'])->name('chat.send');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
-    Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
-    Route::get('/users/{user}', [\App\Http\Controllers\AdminController::class, 'showUser'])->name('users.show');
-    Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'ban'])->name('users.ban');
-    Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unban'])->name('users.unban');
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
+    Route::post('/users/{user}/ban', [AdminController::class, 'ban'])->name('users.ban');
+    Route::post('/users/{user}/unban', [AdminController::class, 'unban'])->name('users.unban');
     
-    Route::get('/colocations', [\App\Http\Controllers\AdminController::class, 'colocations'])->name('colocations');
-    Route::get('/colocations/{id}', [\App\Http\Controllers\AdminController::class, 'showColocation'])->name('colocations.show');
+    Route::get('/colocations', [AdminController::class, 'colocations'])->name('colocations');
+    Route::get('/colocations/{id}', [AdminController::class, 'showColocation'])->name('colocations.show');
 });
 
 require __DIR__.'/auth.php';
