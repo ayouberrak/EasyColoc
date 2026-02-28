@@ -5,26 +5,51 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Sub-Navbar Links -->
                 <div class="flex items-center space-x-10">
-                    <a href="{{ route('dashboard', ['tab' => 'dashboard']) }}" 
+                    <a href="{{ route('dashboard', ['tab' => 'dashboard', 'colocation_id' => request('colocation_id')]) }}" 
                        class="relative py-5 text-xs font-bold uppercase tracking-widest transition-all {{ $tab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-800' }}">
                         Balance
                         @if($tab === 'dashboard') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
                     </a>
-                    <a href="{{ route('dashboard', ['tab' => 'expenses']) }}" 
+                    <a href="{{ route('dashboard', ['tab' => 'expenses', 'colocation_id' => request('colocation_id')]) }}" 
                        class="relative py-5 text-xs font-bold uppercase tracking-widest transition-all {{ $tab === 'expenses' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-800' }}">
                         Dépenses
                         @if($tab === 'expenses') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
                     </a>
-                    <a href="{{ route('dashboard', ['tab' => 'members']) }}" 
+                    <a href="{{ route('dashboard', ['tab' => 'members', 'colocation_id' => request('colocation_id')]) }}" 
                        class="relative py-5 text-xs font-bold uppercase tracking-widest transition-all {{ $tab === 'members' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-800' }}">
                         Colocataires
                         @if($tab === 'members') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
+                    </a>
+                    <a href="{{ route('dashboard', ['tab' => 'payments', 'colocation_id' => request('colocation_id')]) }}" 
+                       class="relative py-5 text-xs font-bold uppercase tracking-widest transition-all {{ $tab === 'payments' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-800' }}">
+                        Paiements
+                        @if($tab === 'payments') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
                     </a>
                 </div>
 
                 <div class="hidden md:flex items-center gap-3">
                     <span class="px-3 py-1 bg-slate-50 text-slate-500 text-[9px] font-bold rounded-full border border-slate-100 uppercase tracking-widest italic">Membre Actif</span>
-                    <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-bold rounded-full border border-blue-100 uppercase tracking-widest italic">Propriétaire: {{ $colocation->owner->name }}</span>
+                    
+                    @if(Auth::user()->is_global_admin && $activeMemberships->count() > 1)
+                        <div class="relative group">
+                            <button class="px-3 py-1 bg-blue-600 text-white text-[9px] font-bold rounded-full border border-blue-700 uppercase tracking-widest italic flex items-center gap-1">
+                                <span>Switch Coloc: {{ $colocation->name }}</span>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+                                @foreach($activeMemberships as $membership)
+                                    <a href="{{ route('dashboard', ['tab' => $tab, 'colocation_id' => $membership->colocation_id]) }}" 
+                                       class="block px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-600 hover:bg-slate-50 hover:text-blue-600 {{ $membership->colocation_id == $colocation->id ? 'bg-blue-50 text-blue-600' : '' }}">
+                                        {{ $membership->colocation->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-bold rounded-full border border-blue-100 uppercase tracking-widest italic italic">Coloc: {{ $colocation->name }}</span>
+                    @endif
+
+                    <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-bold rounded-full border border-blue-100 uppercase tracking-widest italic italic">Propriétaire: {{ $colocation->owner->name }}</span>
                 </div>
             </div>
         </div>
@@ -62,6 +87,8 @@
                 @include('colocations.partials.member.expenses')
             @elseif($tab === 'members')
                 @include('colocations.partials.member.members')
+            @elseif($tab === 'payments')
+                @include('colocations.partials.member.payments')
             @endif
 
         </div>
