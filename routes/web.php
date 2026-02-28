@@ -29,6 +29,8 @@ Route::middleware(['auth', 'ban'])->group(function(){
     Route::get('/owner/dashboard', [\App\Http\Controllers\OwnerDashboardController::class, 'index'])->name('owner.dashboard');
     Route::post('/owner/colocation/cancel', [\App\Http\Controllers\OwnerDashboardController::class, 'anullerColocation'])->name('owner.colocation.cancel');
 
+    Route::get('/my-colocations', [ColocationController::class, 'myColocations'])->name('my-colocations');
+
     Route::post('/expense/store', [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expense.store');
 
     Route::post('/payment/store',[\App\Http\Controllers\PaymentController::class,'store'])->name('payment.store');
@@ -37,11 +39,15 @@ Route::middleware(['auth', 'ban'])->group(function(){
     Route::post('/colocations/owner/{member}', [ColocationController::class, 'transferOwnership'])->name('colocations.transfer-ownership');
 
     Route::post('/colocations/remove/{member}', [\App\Http\Controllers\MemberDashboardController::class, 'leaveByOwner'])->name('colocations.owner.remove');
+
+    Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
+    Route::get('/users/{user}', [\App\Http\Controllers\AdminController::class, 'showUser'])->name('users.show');
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unban'])->name('users.unban');
     
