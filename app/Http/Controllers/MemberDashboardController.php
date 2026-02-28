@@ -19,16 +19,14 @@ class MemberDashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Récupérer toutes les participations actives
         $activeMemberships = ColocationMember::where('user_id', $user->id)
             ->whereNull('left_at')
             ->get();
 
-        if ($activeMemberships->isEmpty()) {
+        if (!$activeMemberships) {
             return redirect()->route('home');
         }
 
-        // Si admin souhaite switcher ou par défaut
         $member = $this->getSelectedMember($user, $activeMemberships, $request->colocation_id);
 
         if (!$member) {
@@ -36,7 +34,7 @@ class MemberDashboardController extends Controller
         }
 
         $colocation = $member->colocation;
-        $tab = $this->getTab($request->tab, ['dashboard', 'members', 'expenses']);
+        $tab = $this->getTab($request->tab, ['dashboard', 'members', 'expenses', 'chat']);
 
         $categories = $this->getAllCategories($colocation->id);
         $debts = $this->getDebts($colocation->id);
@@ -79,8 +77,6 @@ class MemberDashboardController extends Controller
             ->orWhereNull('colocation_id')
             ->get();
     }
-
-
 
 
     private function getDebts($colocationId)
