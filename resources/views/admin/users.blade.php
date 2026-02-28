@@ -34,7 +34,7 @@
                                 {{ substr($user->name, 0, 1) }}
                             </div>
                             <div>
-                                <div class="font-bold text-slate-800">{{ $user->name }}</div>
+                                <a href="{{ route('admin.users.show', $user) }}" class="font-bold text-slate-800 hover:text-blue-600 transition-colors">{{ $user->name }}</a>
                                 @if($user->is_global_admin)
                                     <span class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full uppercase font-black">Admin</span>
                                 @endif
