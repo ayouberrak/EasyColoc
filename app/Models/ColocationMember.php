@@ -15,6 +15,11 @@ class ColocationMember extends Model
         'reputation'
     ];
 
+    protected $casts = [
+        'joined_at' => 'datetime',
+        'left_at' => 'datetime',
+    ];
+
 
     public function user()
     {
