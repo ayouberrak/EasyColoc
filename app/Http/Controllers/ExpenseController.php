@@ -46,7 +46,7 @@ class ExpenseController extends Controller
     $count = count($members);
 
     if ($count <= 1) {
-        return back()->with('success', 'Dépense enregistrée !');
+        return back()->with('success', 'depense enregistre');
     }
 
     $part = $request->amount / $count;
@@ -85,7 +85,6 @@ class ExpenseController extends Controller
                         $debt->save();
 
                     } else {
-
                         Credit::create([
                             'colocation_id' => $colocation->id,
                             'debtor_id' => $memberId,
@@ -120,6 +119,6 @@ class ExpenseController extends Controller
         }
     }
 
-    return back()->with('success', 'Dépense enregistrée !');
+    return back()->with('success', 'depense enregistre');
 }
 }
