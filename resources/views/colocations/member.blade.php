@@ -25,6 +25,11 @@
                         Paiements
                         @if($tab === 'payments') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
                     </a>
+                    <a href="{{ route('dashboard', ['tab' => 'chat', 'colocation_id' => request('colocation_id')]) }}" 
+                       class="relative py-5 text-xs font-bold uppercase tracking-widest transition-all {{ $tab === 'chat' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-800' }}">
+                        Chat
+                        @if($tab === 'chat') <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 rounded-t-full"></span> @endif
+                    </a>
                 </div>
 
                 <div class="hidden md:flex items-center gap-3">
@@ -89,6 +94,8 @@
                 @include('colocations.partials.member.members')
             @elseif($tab === 'payments')
                 @include('colocations.partials.member.payments')
+            @elseif($tab === 'chat')
+                @include('colocations.partials.chat')
             @endif
 
         </div>
