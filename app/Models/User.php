@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->ownedColocations()->exists();
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }
