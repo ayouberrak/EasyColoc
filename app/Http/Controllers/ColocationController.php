@@ -23,14 +23,13 @@ class ColocationController extends Controller
 
         $user = Auth::user();
         if (!$user->is_global_admin && $user->activeMember()->exists()) {
-            return back()->with('error', 'Vous appartenez déjà à une colocation.');
+            return back()->with('error', 'deja membre');
         }
 
         $colo = Colocation::create([
             'name' => $request->name,
             'description' => $request->description,
             'status' => 'active',
-            'token' => Str::random(20),
             'user_id' => Auth::id()
         ]);
 
@@ -54,7 +53,9 @@ class ColocationController extends Controller
         $colo = Colocation::findOrFail($request->colocation_id);
 
         $user = User::where('email', $request->email)->first();
-        if ($user && $colo->members()->where('user_id', $user->id)->whereNull('left_at')->exists()) {
+        if ($user && !$user->is_global_admin &&
+            $colo->members()->where('user_id', $user->id)->whereNull('left_at')->exists())
+        {
             return back()->with('error', 'deja membre.');
         }
 
@@ -67,7 +68,7 @@ class ColocationController extends Controller
 
         Mail::to($request->email)->send(new InvitationMail($invi));
 
-        return back()->with('success', 'Invitation envoyée.');
+        return back()->with('success', 'invi envoyee');
     }
 
     public function showInvitation($token)
@@ -77,7 +78,7 @@ class ColocationController extends Controller
                                 ->firstOrFail();
 
         if (Auth::user()->email !== $invitation->email) {
-            return redirect()->route('dashboard')->with('error', 'no valid');
+            return redirect()->route('home')->with('error', 'no valid');
         }
 
         return view('invitations.show', compact('invitation'));
@@ -91,11 +92,11 @@ class ColocationController extends Controller
         $user = Auth::user();
 
         if ($user->email !== $invi->email) {
-            return back()->with('error', 'email non autorise.');
+            return back()->with('error', 'no valid');
         }
 
         if (!$user->is_global_admin && $user->activeMember()->exists()) {
-            return redirect()->route('dashboard')->with('error', 'Vous avez déjà une colocation active.');
+            return redirect()->route('home')->with('error', 'deja membre.');
         }
 
         ColocationMember::create([
@@ -112,7 +113,10 @@ class ColocationController extends Controller
 
     public function declineInvitation($token)
     {
-        $invi = Invitation::where('token', $token)->where('status', 'pending')->firstOrFail();
+        $invi = Invitation::where('token', $token)
+                            ->where('status', 'pending')
+                            ->firstOrFail();
+
         $invi->update(['status' => 'cancelled']);
 
         return redirect()->route('home');
@@ -130,7 +134,7 @@ class ColocationController extends Controller
 
         $member->update(['role' => 'owner']);
 
-        return redirect()->route('dashboard')->with('success', 'Propriété transférée avec succès.');
+        return redirect()->route('dashboard')->with('success', 'is transfert');
     }
 
     public function myColocations()
