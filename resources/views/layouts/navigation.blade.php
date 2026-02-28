@@ -19,6 +19,8 @@
                     <a href="{{ route('home') }}#features" class="text-sm font-semibold text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md">Comment ça marche</a>
 
                     @auth
+                        <a href="{{ route('my-colocations') }}" class="text-sm font-semibold {{ request()->routeIs('my-colocations') ? 'text-blue-600 bg-blue-50' : 'text-slate-600 hover:text-blue-600' }} px-3 py-2 rounded-md transition-all">Mes Colocations</a>
+                        
                         @if(Auth::user()->is_global_admin)
                             <a href="{{ route('admin.dashboard') }}" class="text-sm font-semibold {{ request()->routeIs('admin.dashboard') ? 'text-blue-600 bg-blue-50' : 'text-slate-600 hover:text-blue-600' }} px-3 py-2 rounded-md transition-all">
                                 {{ __('Admin Panel') }}
@@ -31,9 +33,15 @@
                             </a>
                         @endif
 
-                        @if(Auth::user()->isOwner())
+                        @if(Auth::user()->isOwner() && !Auth::user()->is_global_admin)
                             <a href="{{ route('owner.dashboard') }}" class="text-sm font-semibold {{ request()->routeIs('owner.dashboard') ? 'text-blue-600 bg-blue-50' : 'text-slate-600 hover:text-blue-600' }} px-3 py-2 rounded-md transition-all">
                                 {{ __('Tableau de bord') }}
+                            </a>
+                        @endif
+
+                        @if(Auth::user()->is_global_admin || !Auth::user()->activeMember()->exists())
+                            <a href="{{ route('colocations.create') }}" class="ml-4 px-4 py-2 bg-blue-600 text-white text-[11px] font-black rounded-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 uppercase tracking-widest">
+                                Créer une colocation
                             </a>
                         @endif
                     @endauth
@@ -63,6 +71,13 @@
                                     <p class="text-xs font-semibold text-slate-900 truncate">{{ Auth::user()->email }}</p>
                                 </div>
                                 <div class="p-1">
+                                    @if(Auth::user()->is_global_admin)
+                                        <x-dropdown-link :href="route('admin.dashboard')" class="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-all">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                            {{ __('Admin Panel') }}
+                                        </x-dropdown-link>
+                                    @endif
+
                                     <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                                         {{ __('Mon profil') }}
@@ -112,6 +127,8 @@
             <a href="{{ route('home') }}#features" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all">Comment ça marche</a>
 
             @auth
+                <a href="{{ route('my-colocations') }}" class="block px-3 py-2 rounded-md text-base font-semibold {{ request()->routeIs('my-colocations') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }} transition-all">Mes Colocations</a>
+
                 @if(Auth::user()->is_global_admin)
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-semibold {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }} transition-all">
                         {{ __('Admin Panel') }}
@@ -124,9 +141,15 @@
                     </a>
                 @endif
 
-                @if(Auth::user()->isOwner())
+                @if(Auth::user()->isOwner() && !Auth::user()->is_global_admin)
                     <a href="{{ route('owner.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-semibold {{ request()->routeIs('owner.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }} transition-all">
                         {{ __('Tableau de bord') }}
+                    </a>
+                @endif
+
+                @if(Auth::user()->is_global_admin || !Auth::user()->activeMember()->exists())
+                    <a href="{{ route('colocations.create') }}" class="block px-3 py-2 rounded-md text-base font-black text-blue-600 hover:bg-blue-50 transition-all uppercase tracking-widest">
+                        Créer une colocation
                     </a>
                 @endif
             @endauth
@@ -146,6 +169,12 @@
                 </div>
 
                 <div class="space-y-1">
+                    @if(Auth::user()->is_global_admin)
+                        <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-semibold text-blue-600 hover:bg-white transition-all">
+                            {{ __('Admin Panel') }}
+                        </a>
+                    @endif
+
                     <a href="{{ route('profile.edit')}}" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:bg-white transition-all">
                         {{ __('Mon profil') }}
                     </a>
