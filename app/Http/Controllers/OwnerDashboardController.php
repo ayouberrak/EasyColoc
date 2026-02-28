@@ -76,7 +76,7 @@ class OwnerDashboardController extends Controller
 
     private function getTab($tab): string
     {
-        return in_array($tab, ['dashboard','members','expenses','payments', 'categories']) ? $tab : 'dashboard';
+        return in_array($tab, ['dashboard','members','expenses','payments', 'categories', 'chat']) ? $tab : 'dashboard';
     }
 
     private function getMembersWithOwner(Colocation $colocation)
