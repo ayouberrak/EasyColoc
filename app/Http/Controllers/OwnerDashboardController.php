@@ -19,7 +19,11 @@ class OwnerDashboardController extends Controller
     public function index(Request $request): View
     {
         $user = Auth::user();
-        $colocation = $this->getColocation($user);
+        $colocation = $this->getColocation($user, $request->colocation_id);
+
+        if (!$colocation) {
+            return redirect()->route('home');
+        }
 
         $tab = $this->getTab($request->tab);
 
@@ -37,7 +41,10 @@ class OwnerDashboardController extends Controller
         $totalPay = $payments->sum('amount');
         $balance = $totalPay - $totalExp;
 
-        $categories = Category::all();
+        $categories = Category::where('colocation_id', $colocation->id)
+            ->orWhereNull('colocation_id')
+            ->get();
+            
         $debts = Credit::with(['debtor','creditor'])
             ->where('colocation_id', $colocation->id)
             ->get();
@@ -58,18 +65,18 @@ class OwnerDashboardController extends Controller
         ]);
     }
 
-    private function getColocation($user)
+    private function getColocation($user, $requestedColocationId = null)
     {
-        $colocation = Colocation::where('user_id', $user->id)->first();
-        if (!$colocation) {
-            return redirect()->route('home');
+        if ($user->is_global_admin && $requestedColocationId) {
+            return Colocation::find($requestedColocationId);
         }
-        return $colocation;
+
+        return Colocation::where('user_id', $user->id)->first();
     }
 
     private function getTab($tab): string
     {
-        return in_array($tab, ['dashboard','members','expenses','payments']) ? $tab : 'dashboard';
+        return in_array($tab, ['dashboard','members','expenses','payments', 'categories']) ? $tab : 'dashboard';
     }
 
     private function getMembersWithOwner(Colocation $colocation)
