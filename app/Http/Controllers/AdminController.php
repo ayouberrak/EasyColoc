@@ -27,6 +27,12 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
+    public function showUser(User $user)
+    {
+        $memberships = $user->member()->with('colocation.owner')->get();
+        return view('admin.show-user', compact('user', 'memberships'));
+    }
+
     public function ban(User $user)
     {
         $ownedColocations = Colocation::where('user_id', $user->id)->where('status', 'active')->get();
