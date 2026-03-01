@@ -163,7 +163,11 @@
                 <h3 class="text-xl font-bold text-slate-900 mb-6 tracking-tight">Ma Part Mensuelle</h3>
                 <div class="space-y-6">
                     <div class="flex items-end gap-2">
-                        <span class="text-4xl font-bold text-slate-900 tracking-tight">1,166</span>
+                        <span class="text-4xl font-bold text-slate-900 tracking-tight">
+                            <p class=" {{ $myGlobalBalance < 0 ? 'text-red-400' : ($myGlobalBalance > 0 ? 'text-green-400' : 'text-white') }} tracking-tight">
+                                {{ number_format($myGlobalBalance, 2) }}
+                            </p>
+                        </span>
                         <span class="text-sm font-bold text-slate-400 uppercase mb-2">DH</span>
                     </div>
                     <div class="space-y-2">
