@@ -1,6 +1,5 @@
 <div class="h-full max-w-5xl mx-auto flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" style="height: calc(100vh - 12rem); min-height: 500px;">
     
-    <!-- Header -->
     <div class="px-6 py-4 flex items-center justify-between border-b border-slate-100 bg-white z-10">
         <div class="flex items-center gap-4">
             <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">
@@ -26,7 +25,6 @@
         </div>
     </div>
 
-    <!-- Messages Container -->
     <div id="messages-container" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50 lg:px-12">
         <div id="chat-loader" class="flex flex-col items-center justify-center h-full text-slate-400">
             <svg class="animate-spin w-6 h-6 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -67,18 +65,14 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/chat/" + colocationId)
         .then(response => response.json())
         .then(messages => {
-
             messagesContainer.innerHTML = "";
-
             if (messages.length === 0) {
                 messagesContainer.innerHTML =
                     "<p class='text-center text-slate-400'>Aucun message</p>";
             }
-
             messages.forEach(msg => {
                 afficherMessage(msg);
             });
-
             scrollBas();
         });
 
@@ -124,10 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         })
         .finally(() => {
-
             sendBtn.disabled = false;
             chatInput.focus();
-
         });
 
     });

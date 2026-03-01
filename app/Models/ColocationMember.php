@@ -11,8 +11,7 @@ class ColocationMember extends Model
         'colocation_id',
         'role',
         'joined_at',
-        'left_at',
-        'reputation'
+        'left_at'
     ];
 
     protected $casts = [

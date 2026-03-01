@@ -67,7 +67,7 @@ class ChatController extends Controller
         broadcast(new MessageSent($message));
 
         return response()->json([
-            'status' => 'Message Envoyé!', 
+            'status' => 'envoye', 
             'message' => $message
         ]);
     }

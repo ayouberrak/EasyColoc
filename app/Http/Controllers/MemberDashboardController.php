@@ -18,17 +18,15 @@ class MemberDashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
         $activeMemberships = ColocationMember::where('user_id', $user->id)
             ->whereNull('left_at')
             ->get();
 
-        if (!$activeMemberships) {
+        if ($activeMemberships->isEmpty()) {
             return redirect()->route('home');
         }
 
         $member = $this->getSelectedMember($user, $activeMemberships, $request->colocation_id);
-
         if (!$member) {
             return redirect()->route('home');
         }
@@ -38,9 +36,7 @@ class MemberDashboardController extends Controller
 
         $categories = $this->getAllCategories($colocation->id);
         $debts = $this->getDebts($colocation->id);
-
         $members = $this->getMembersWithOwner($colocation);
-
         $expenses = $this->getExpenses($colocation, $request->month, $request->year);
 
         $userDebts = [];
@@ -61,7 +57,6 @@ class MemberDashboardController extends Controller
         if ($user->is_global_admin && $requestedColocationId) {
             return $activeMemberships->firstWhere('colocation_id', $requestedColocationId);
         }
-
         return $activeMemberships->first();
     }
 
@@ -77,7 +72,6 @@ class MemberDashboardController extends Controller
             ->orWhereNull('colocation_id')
             ->get();
     }
-
 
     private function getDebts($colocationId)
     {
@@ -95,7 +89,6 @@ class MemberDashboardController extends Controller
                 'user_id' => $colocation->user_id,
                 'colocation_id' => $colocation->id,
                 'role' => 'owner',
-                'reputation' => 0,
                 'created_at' => $colocation->created_at ?? now()
             ]);
             $owner->setRelation('user', $colocation->owner);
@@ -103,7 +96,6 @@ class MemberDashboardController extends Controller
         }
 
         $colocation->setRelation('members', $members);
-
         return $members;
     }
 
@@ -121,37 +113,34 @@ class MemberDashboardController extends Controller
         return $query->orderBy('date','desc')->get();
     }
 
-
     public function leaveSeul(Request $request)
     {
         $userId = Auth::id();
-
-        $member = ColocationMember::where('user_id', $userId)->firstOrFail();
-
+        $member = ColocationMember::where('user_id', $userId)->whereNull('left_at')->firstOrFail();
         $hasCredit = Credit::where('creditor_id', $userId)->exists();
 
         $member->update([
             'left_at' => Carbon::now(),
-            'reputation' => $member->reputation + ($hasCredit ? -1 : 1)
         ]);
+
+        $member->user->increment('reputation', $hasCredit ? -1 : 1);
 
         return redirect()->route('home');
     }
 
+    public function leaveByOwner(ColocationMember $member)
+    {
+        $ownerId = $member->colocation->user_id;
+        $colocationId = $member->colocation_id;
+        $leavingUserId = $member->user_id;
 
-public function leaveByOwner(ColocationMember $member)
-{
-    $ownerId = $member->colocation->user_id;
-    $colocationId = $member->colocation_id;
-    $leavingUserId = $member->user_id;
+        Credit::where('colocation_id', $colocationId)
+            ->where('creditor_id', $leavingUserId)
+            ->update(['creditor_id' => $ownerId]);
 
-    Credit::where('colocation_id', $colocationId)
-        ->where('creditor_id', $leavingUserId)
-        ->update(['creditor_id' => $ownerId]);
-
-    Credit::where('colocation_id', $colocationId)
-        ->where('debtor_id', $leavingUserId)
-        ->update(['debtor_id' => $ownerId]);
+        Credit::where('colocation_id', $colocationId)
+            ->where('debtor_id', $leavingUserId)
+            ->update(['debtor_id' => $ownerId]);
 
     $member->update([
         'left_at' => Carbon::now()
@@ -161,42 +150,38 @@ public function leaveByOwner(ColocationMember $member)
             ->where('debtor_id', $leavingUserId)
             ->exists()
     ) {
-        $member->decrement('reputation');
-    } else {
-        $member->increment('reputation');
-    }
+            $member->user->decrement('reputation');
+        } else {
+            $member->user->increment('reputation');
+        }
 
-    Credit::where('colocation_id', $colocationId)
-        ->where('creditor_id', $ownerId)
-        ->where('debtor_id', $ownerId)
-        ->delete();
+        Credit::where('colocation_id', $colocationId)
+            ->where('creditor_id', $ownerId)
+            ->where('debtor_id', $ownerId)
+            ->delete();
 
-    $duplicatePairs = Credit::where('colocation_id', $colocationId)
-        ->select('debtor_id', 'creditor_id')
-        ->groupBy('debtor_id', 'creditor_id')
-        ->havingRaw('COUNT(*) > 1')
-        ->get();
-
-    foreach ($duplicatePairs as $pair) {
-        $totalAmount = Credit::where('colocation_id', $colocationId)
-            ->where('debtor_id', $pair->debtor_id)
-            ->where('creditor_id', $pair->creditor_id)
-            ->sum('amount');
-
-        $credits = Credit::where('colocation_id', $colocationId)
-            ->where('debtor_id', $pair->debtor_id)
-            ->where('creditor_id', $pair->creditor_id)
+        $duplicatePairs = Credit::where('colocation_id', $colocationId)
+            ->select('debtor_id', 'creditor_id')
+            ->groupBy('debtor_id', 'creditor_id')
+            ->havingRaw('COUNT(*) > 1')
             ->get();
 
-        $first = $credits->shift();
-        $first->update(['amount' => $totalAmount]);
+        foreach ($duplicatePairs as $pair) {
+            $credits = Credit::where('colocation_id', $colocationId)
+                ->where('debtor_id', $pair->debtor_id)
+                ->where('creditor_id', $pair->creditor_id)
+                ->get();
 
-        foreach ($credits as $duplicate) {
-            $duplicate->delete();
+            $totalAmount = $credits->sum('amount');
+            $first = $credits->shift();
+            $first->update(['amount' => $totalAmount]);
+
+            foreach ($credits as $duplicate) {
+                $duplicate->delete();
+            }
         }
-    }
 
-    return redirect()->route('dashboard');
-}
+        return redirect()->route('dashboard');
+    }
 
 }

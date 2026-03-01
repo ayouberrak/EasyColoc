@@ -88,7 +88,6 @@ class OwnerDashboardController extends Controller
                 'user_id' => $colocation->user_id,
                 'colocation_id' => $colocation->id,
                 'role' => 'owner',
-                'reputation' => 0,
                 'created_at' => $colocation->created_at ?? now()
             ]);
             $ownerMember->setRelation('user', $colocation->owner);
