@@ -16,7 +16,7 @@ use Illuminate\View\View;
 
 class OwnerDashboardController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $user = Auth::user();
         $colocation = $this->getColocation($user, $request->colocation_id);

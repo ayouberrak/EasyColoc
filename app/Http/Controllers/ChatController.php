@@ -59,7 +59,7 @@ class ChatController extends Controller
         $message = Message::create([
             'user_id' => $user->id,
             'colocation_id' => $request->colocation_id,
-            'content' => $request->content
+            'content' => $request->input('content')
         ]);
 
         $message->load('user');
